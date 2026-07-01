@@ -62,3 +62,23 @@ chrome_debug/
 
 # ZIP files
 *.zip
+
+# Unrelated project and assignment directories to exclude
+Case Study 1 - Employee Attrition Predictor/
+Exercise 1 - Student Marks Prediction/
+ML Fundamentals Exercises/
+assignment_cba/
+chfjpy_bot/
+errogo_project/
+lodge-bright-beam/
+dashboard/
+backtest.py
+config.py
+logger.py
+main.py
+ml_model.py
+strategy.py
+trader.py
+trades.json
+telegram_alerts.py
+API-Quotex-main.zip
