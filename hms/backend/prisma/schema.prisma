@@ -1,0 +1,203 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  GUEST
+  RECEPTIONIST
+  HOUSEKEEPING
+  ADMIN
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  role          Role     @default(GUEST)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  guestProfile  Guest?
+  staffProfile  Staff?
+}
+
+model Guest {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  firstName   String
+  lastName    String
+  phoneNumber String?
+  address     String?
+  preferences Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reservations Reservation[]
+}
+
+model Staff {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  firstName   String
+  lastName    String
+  phoneNumber String?
+  position    String
+  department  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assignedTasks HousekeepingTask[]
+}
+
+model RoomType {
+  id           String   @id @default(uuid())
+  typeName     String   @unique
+  description  String?
+  maxOccupancy Int
+  baseRate     Decimal  @db.Decimal(10, 2)
+  amenities    Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  rooms Room[]
+}
+
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+  CLEANING
+}
+
+model Room {
+  id          String     @id @default(uuid())
+  roomNumber  String     @unique
+  roomTypeId  String
+  roomType    RoomType   @relation(fields: [roomTypeId], references: [id])
+  floor       Int
+  status      RoomStatus @default(AVAILABLE)
+  amenities   Json?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  reservations Reservation[]
+  tasks        HousekeepingTask[]
+}
+
+enum ReservationStatus {
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+}
+
+model Reservation {
+  id               String            @id @default(uuid())
+  reservationNo    String            @unique
+  guestId          String
+  guest            Guest             @relation(fields: [guestId], references: [id])
+  roomId           String
+  room             Room              @relation(fields: [roomId], references: [id])
+  checkInDate      DateTime          @db.Date
+  checkOutDate     DateTime          @db.Date
+  numberOfGuests   Int
+  status           ReservationStatus @default(CONFIRMED)
+  totalAmount      Decimal           @db.Decimal(10, 2)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  invoices Invoice[]
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+}
+
+model Invoice {
+  id              String        @id @default(uuid())
+  invoiceNumber   String        @unique
+  reservationId   String
+  reservation     Reservation   @relation(fields: [reservationId], references: [id])
+  roomCharges     Decimal       @db.Decimal(10, 2)
+  serviceCharges  Decimal       @db.Decimal(10, 2) @default(0.00)
+  tax             Decimal       @db.Decimal(10, 2)
+  totalAmount     Decimal       @db.Decimal(10, 2)
+  paymentStatus   PaymentStatus @default(PENDING)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  payments Payment[]
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  ONLINE
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  invoiceId     String
+  invoice       Invoice       @relation(fields: [invoiceId], references: [id])
+  paymentMethod PaymentMethod
+  amount        Decimal       @db.Decimal(10, 2)
+  paymentDate   DateTime      @default(now())
+  transactionId String?
+  createdAt     DateTime      @default(now())
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+model HousekeepingTask {
+  id          String     @id @default(uuid())
+  roomId      String
+  room        Room       @relation(fields: [roomId], references: [id])
+  assignedTo  String?
+  staff       Staff?     @relation(fields: [assignedTo], references: [id])
+  description String
+  status      TaskStatus @default(PENDING)
+  scheduledFor DateTime   @db.Date
+  completedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum ServiceStatus {
+  REQUESTED
+  IN_PROGRESS
+  FULFILLED
+  CANCELLED
+}
+
+model ServiceRequest {
+  id          String        @id @default(uuid())
+  guestId     String
+  roomId      String
+  serviceType String
+  description String?
+  status      ServiceStatus @default(REQUESTED)
+  requestedAt DateTime      @default(now())
+  fulfilledAt DateTime?
+  updatedAt   DateTime      @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reception Workspace | Flex-Stays</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .dashboard-layout {
+            display: flex;
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
+            background: #faf9f6;
+        }
+        
+        .dashboard-sidebar {
+            width: 280px;
+            background: #0d2a2a;
+            color: #fff;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(10, 191, 172, 0.2);
+            flex-shrink: 0;
+        }
+        
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #0ABFAC;
+            color: #0d2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .user-info h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+        }
+        
+        .user-info p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .menu-link-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .menu-link i {
+            width: 18px;
+            height: 18px;
+            color: rgba(255,255,255,0.6);
+            transition: color 0.2s;
+        }
+        
+        .menu-link:hover {
+            background: rgba(10, 191, 172, 0.1);
+            color: #0ABFAC;
+        }
+        
+        .menu-link:hover i {
+            color: #0ABFAC;
+        }
+        
+        .menu-link.active {
+            background: #0ABFAC;
+            color: #0d2a2a;
+            font-weight: 600;
+        }
+        
+        .menu-link.active i {
+            color: #0d2a2a;
+        }
+        
+        .menu-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .menu-link.active .menu-badge {
+            background: #0d2a2a;
+            color: #0ABFAC;
+        }
+        
+        .dashboard-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        
+        .dashboard-panel {
+            display: none;
+            animation: fadeInPanel 0.4s ease forwards;
+        }
+        
+        .dashboard-panel.active {
+            display: block;
+        }
+        
+        @keyframes fadeInPanel {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .stat-card-left h4 {
+            margin: 0;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .stat-card-left p {
+            margin: 8px 0 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #0d2a2a;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(10, 191, 172, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #09a898;
+        }
+
+        .panel-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            margin-bottom: 30px;
+        }
+        
+        .panel-card-title {
+            font-family: 'Poppins', sans-serif;
+            color: #0d2a2a;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .custom-table th {
+            padding: 14px 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .custom-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--text-main);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-badge.available {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        .status-badge.occupied {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .status-badge.dirty {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+        .status-badge.maintenance {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+        .btn-action-primary {
+            background: #0ABFAC;
+            color: #0d2a2a;
+        }
+        .btn-action-primary:hover {
+            background: #09a898;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            border-color: #0ABFAC;
+        }
+
+        .btn-submit {
+            background: #0d2a2a;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-submit:hover {
+            background: #0ABFAC;
+            color: #0d2a2a;
+        }
+
+        @media (max-width: 991px) {
+            .dashboard-layout { flex-direction: column; }
+            .dashboard-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(10, 191, 172, 0.2); }
+            .dashboard-content { padding: 24px; }
+        }
+    </style>
+</head>
+<body class="bg-cream">
+
+    <!-- Header Navbar -->
+    <nav class="navbar scrolled" id="navbar" style="position: fixed; background: #0d2a2a;">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon" style="border-color:#0ABFAC; background:rgba(10,191,172,0.15);">
+                    <i data-lucide="hotel" style="color:#0ABFAC;"></i>
+                </div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <span class="nav-item" style="color:rgba(255,255,255,0.5);">Hotel Operations Console</span>
+            </div>
+            <div class="nav-actions">
+                <!-- Notifications bell injected dynamically -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Main Layout -->
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-user">
+                <div class="user-avatar">R</div>
+                <div class="user-info">
+                    <h3 id="staffName">Reception Desk</h3>
+                    <p id="staffRole">Guest Relations</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <div class="menu-link active" data-target="panel-arrivals">
+                    <div class="menu-link-left">
+                        <i data-lucide="log-in"></i>
+                        <span>Check-Ins</span>
+                    </div>
+                    <span class="menu-badge" id="badgeArrivals">0</span>
+                </div>
+                <div class="menu-link" data-target="panel-departures">
+                    <div class="menu-link-left">
+                        <i data-lucide="log-out"></i>
+                        <span>Check-Outs</span>
+                    </div>
+                    <span class="menu-badge" id="badgeDepartures">0</span>
+                </div>
+                <div class="menu-link" data-target="panel-allocation">
+                    <div class="menu-link-left">
+                        <i data-lucide="grid"></i>
+                        <span>Room Allocation</span>
+                    </div>
+                </div>
+                <div class="menu-link" data-target="panel-requests">
+                    <div class="menu-link-left">
+                        <i data-lucide="concierge-bell"></i>
+                        <span>Guest Requests</span>
+                    </div>
+                </div>
+                <div class="menu-link" data-target="panel-walkin">
+                    <div class="menu-link-left">
+                        <i data-lucide="plus-circle"></i>
+                        <span>Walk-In Booking</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Content Panels -->
+        <main class="dashboard-content">
+            
+            <!-- Statistics Row -->
+            <div class="cards-grid">
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Pending Arrivals</h4>
+                        <p id="statArrivals">0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#0ABFAC; background:rgba(10,191,172,0.1);"><i data-lucide="log-in"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Active Stays</h4>
+                        <p id="statActive">0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#d97706; background:rgba(245,158,11,0.1);"><i data-lucide="key"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Vacant Clean Rooms</h4>
+                        <p id="statAvailable">0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#10b981; background:rgba(16,185,129,0.1);"><i data-lucide="check-circle"></i></div>
+                </div>
+            </div>
+
+            <!-- Panel 1: Check-Ins (Arrivals) -->
+            <section class="dashboard-panel active" id="panel-arrivals">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Today's Pending Guest Arrivals</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Guest</th>
+                                    <th>Room Category</th>
+                                    <th>Check-In/Out</th>
+                                    <th>Guest count</th>
+                                    <th>Status</th>
+                                    <th>Action / Room Allocate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="arrivalsTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 2: Check-Outs (Departures) -->
+            <section class="dashboard-panel" id="panel-departures">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Currently Checked-In Guests</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Guest</th>
+                                    <th>Room Number</th>
+                                    <th>Room Category</th>
+                                    <th>Departure Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="departuresTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 3: Room Allocation Grid -->
+            <section class="dashboard-panel" id="panel-allocation">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Real-Time Hotel Room Registry Board</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Room #</th>
+                                    <th>Floor</th>
+                                    <th>Category</th>
+                                    <th>Occupancy status</th>
+                                    <th>Housekeeping state</th>
+                                    <th>Logged Issue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allocationTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 4: Guest Requests -->
+            <section class="dashboard-panel" id="panel-requests">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Log Guest Concierge Request</h3>
+                    <form id="requestForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:30px; align-items:flex-end;">
+                        <div class="form-group" style="margin:0;">
+                            <label>Room #</label>
+                            <input type="text" class="form-control" id="reqRoom" placeholder="e.g. 204" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>Item Requested</label>
+                            <select class="form-control" id="reqItem">
+                                <option>Extra Pillows</option>
+                                <option>Fresh Towels</option>
+                                <option>Universal Adapter</option>
+                                <option>Ice Bucket</option>
+                                <option>Room Cleaning request</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-submit" style="height:42px; padding:0 20px;">Log Request</button>
+                    </form>
+
+                    <h4 style="margin: 20px 0 10px; color:#0d2a2a;">Logged Requests Ticketing Board</h4>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Room #</th>
+                                    <th>Service Item</th>
+                                    <th>Timestamp</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requestsTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 5: Walk-In Booking -->
+            <section class="dashboard-panel" id="panel-walkin">
+                <div class="panel-card" style="max-width: 600px;">
+                    <h3 class="panel-card-title">Instant Walk-In Reservation Quickform</h3>
+                    <form id="walkinForm">
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                            <div class="form-group">
+                                <label for="walkFirst">First Name</label>
+                                <input type="text" class="form-control" id="walkFirst" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="walkLast">Last Name</label>
+                                <input type="text" class="form-control" id="walkLast" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="walkEmail">Email Address</label>
+                            <input type="email" class="form-control" id="walkEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="walkCategory">Room Category</label>
+                            <select class="form-control" id="walkCategory">
+                                <option value="Standard Rooms">Standard Rooms ($180 - $280/night)</option>
+                                <option value="Deluxe Rooms">Deluxe Rooms ($500 - $680/night)</option>
+                                <option value="Executive Suites" selected>Executive Suites ($850 - $1300/night)</option>
+                                <option value="Presidential Suites">Presidential Suites ($2500 - $5000/night)</option>
+                            </select>
+                        </div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px;">
+                            <div class="form-group">
+                                <label for="walkCheckin">Check-In</label>
+                                <input type="date" class="form-control" id="walkCheckin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="walkCheckout">Check-Out</label>
+                                <input type="date" class="form-control" id="walkCheckout" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="walkGuests">Guests count</label>
+                                <input type="number" class="form-control" id="walkGuests" value="2" min="1" max="4">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit">Process Booking & Allocate Room</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Shared Session scripts -->
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = window.getCurrentUser();
+            if (user) {
+                document.getElementById('staffName').textContent = user.firstName + ' ' + (user.lastName || '');
+            }
+
+            // Set default checkin date in walkin form to today
+            const walkinCheckin = document.getElementById('walkinCheckin');
+            if (walkinCheckin) {
+                walkinCheckin.value = new Date().toISOString().split('T')[0];
+            }
+
+            // Tab Panels Toggle
+            const menuLinks = document.querySelectorAll('.menu-link');
+            const panels = document.querySelectorAll('.dashboard-panel');
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    panels.forEach(p => p.classList.remove('active'));
+                    
+                    link.classList.add('active');
+                    const target = link.getAttribute('data-target');
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+
+            // Handle Guest Concierge requests submitting
+            const requestForm = document.getElementById('requestForm');
+            requestForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const roomNum = document.getElementById('reqRoom').value;
+                const item = document.getElementById('reqItem').value;
+
+                let tickets = JSON.parse(localStorage.getItem('guestRequests') || '[]');
+                tickets.unshift({
+                    id: 'REQ' + Math.floor(1000 + Math.random() * 9000),
+                    roomNumber: roomNum,
+                    item: item,
+                    timestamp: new Date().toISOString(),
+                    status: 'Pending'
+                });
+                localStorage.setItem('guestRequests', JSON.stringify(tickets));
+
+                if (window.addNotification) {
+                    window.addNotification(`Room ${roomNum} requested service: ${item}`, ['housekeeping', 'reception', 'admin']);
+                }
+
+                requestForm.reset();
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            });
+
+            // Handle walkin bookings
+            const walkinForm = document.getElementById('walkinForm');
+            walkinForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const first = document.getElementById('walkFirst').value;
+                const last = document.getElementById('walkLast').value;
+                const email = document.getElementById('walkEmail').value;
+                const category = document.getElementById('walkCategory').value;
+                const checkin = document.getElementById('walkCheckin').value;
+                const checkout = document.getElementById('walkCheckout').value;
+                const guests = document.getElementById('walkGuests').value;
+
+                // Find available clean room number
+                const registry = JSON.parse(localStorage.getItem('roomRegistry') || '{}');
+                const matchedRoom = Object.keys(registry).find(num => {
+                    const r = registry[num];
+                    return r.category === category && r.status === 'Available' && r.housekeeping === 'Clean';
+                });
+
+                if (!matchedRoom) {
+                    alert(`No vacant clean rooms are currently available in the category: ${category}. Please check cleaning boards or select another type.`);
+                    return;
+                }
+
+                // Create paid booking object
+                const bookingId = 'BK-' + Math.floor(10000 + Math.random() * 90000);
+                const newBooking = {
+                    id: bookingId,
+                    roomName: category + ' (Walk-In)',
+                    roomCost: category === 'Standard Rooms' ? 200 : (category === 'Deluxe Rooms' ? 550 : 950),
+                    totalCost: category === 'Standard Rooms' ? 200 : (category === 'Deluxe Rooms' ? 550 : 950),
+                    checkinDate: checkin,
+                    checkoutDate: checkout,
+                    guests: guests,
+                    status: 'Checked In',
+                    roomNumber: matchedRoom,
+                    guestInfo: {
+                        firstName: first,
+                        lastName: last,
+                        email: email
+                    }
+                };
+
+                // Save globally
+                let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                bookings.unshift(newBooking);
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+
+                // Save to registry
+                registry[matchedRoom].status = 'Occupied';
+                localStorage.setItem('roomRegistry', JSON.stringify(registry));
+
+                // Log audit & alerts
+                const operator = user ? user.email : 'reception@flexstays.com';
+                if (window.addAuditLog) {
+                    window.addAuditLog(operator, `Processed Walk-In check-in for guest ${email} into Room ${matchedRoom}`);
+                }
+                if (window.addNotification) {
+                    window.addNotification(`Guest checked in to Room ${matchedRoom} (Walk-In)`, ['reception', 'admin', 'housekeeping']);
+                }
+
+                walkinForm.reset();
+                alert(`Walk-In reservation completed successfully! Allocated Room: ${matchedRoom}`);
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            });
+
+            // LocalStorage sync handler
+            window.addEventListener('storage', (e) => {
+                if (['bookings', 'roomRegistry', 'guestRequests'].includes(e.key)) {
+                    loadData();
+                }
+            });
+
+            // Initial load
+            loadData();
+        });
+
+        function loadData() {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const registry = JSON.parse(localStorage.getItem('roomRegistry') || '{}');
+            const requests = JSON.parse(localStorage.getItem('guestRequests') || '[]');
+
+            let arrivalsCount = 0;
+            let activeCount = 0;
+            let availableCount = 0;
+
+            const arrivalsBody = document.getElementById('arrivalsTableBody');
+            const departuresBody = document.getElementById('departuresTableBody');
+            const allocationBody = document.getElementById('allocationTableBody');
+            const requestsBody = document.getElementById('requestsTableBody');
+
+            arrivalsBody.innerHTML = '';
+            departuresBody.innerHTML = '';
+            allocationBody.innerHTML = '';
+            requestsBody.innerHTML = '';
+
+            // Render arrivals and departures
+            bookings.forEach(b => {
+                if (b.status === 'Confirmed' || !b.status) {
+                    arrivalsCount++;
+                    // Find available clean room numbers for selector
+                    const cleanRooms = Object.keys(registry).filter(num => {
+                        const r = registry[num];
+                        // Categorical alignment: b.roomName contains standard/deluxe/etc
+                        return r.category.toLowerCase().includes(b.roomName.split(' ')[0].toLowerCase()) && r.status === 'Available' && r.housekeeping === 'Clean';
+                    });
+
+                    let roomSelectOpts = cleanRooms.map(num => `<option value="${num}">Room ${num}</option>`).join('');
+                    if (cleanRooms.length === 0) {
+                        roomSelectOpts = `<option value="">-- Sold Out --</option>`;
+                    } else {
+                        roomSelectOpts = `<option value="">-- Choose Room --</option>` + roomSelectOpts;
+                    }
+
+                    arrivalsBody.innerHTML += `
+                        <tr>
+                            <td><strong>${b.id}</strong></td>
+                            <td>${b.guestInfo ? b.guestInfo.firstName + ' ' + b.guestInfo.lastName : 'Vanderbilt Guest'}</td>
+                            <td>${b.roomName}</td>
+                            <td>${b.checkinDate} to ${b.checkoutDate}</td>
+                            <td>${b.guests} Guests</td>
+                            <td><span class="status-badge pending">Confirmed</span></td>
+                            <td>
+                                <div style="display:flex; gap:8px; align-items:center;">
+                                    <select class="form-control" id="alloc-${b.id}" style="width:140px; padding:4px 8px; font-size:12px;" required>
+                                        ${roomSelectOpts}
+                                    </select>
+                                    <button class="btn-action btn-action-primary" onclick="checkInGuest('${b.id}')" ${cleanRooms.length === 0 ? 'disabled' : ''}>Check In</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                } else if (b.status === 'Checked In') {
+                    activeCount++;
+                    departuresBody.innerHTML += `
+                        <tr>
+                            <td><strong>${b.id}</strong></td>
+                            <td>${b.guestInfo ? b.guestInfo.firstName + ' ' + b.guestInfo.lastName : 'Alexander Vanderbilt'}</td>
+                            <td><strong>Room ${b.roomNumber || '101'}</strong></td>
+                            <td>${b.roomName}</td>
+                            <td>${b.checkoutDate}</td>
+                            <td><span class="status-badge available" style="background:rgba(10,191,172,0.1); color:#0ABFAC;">In House</span></td>
+                            <td>
+                                <button class="btn-action btn-action-primary" style="background:#ef4444; color:#fff;" onclick="checkOutGuest('${b.id}')">Check Out</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+
+            // Render room registry table
+            const roomNums = Object.keys(registry).sort((a,b) => parseInt(a) - parseInt(b));
+            roomNums.forEach(num => {
+                const room = registry[num];
+                if (room.status === 'Available' && room.housekeeping === 'Clean') {
+                    availableCount++;
+                }
+
+                let classText = 'available';
+                if (room.status === 'Occupied') classText = 'occupied';
+                else if (room.status === 'Maintenance') classText = 'maintenance';
+
+                allocationBody.innerHTML += `
+                    <tr>
+                        <td><strong>${num}</strong></td>
+                        <td>Floor ${room.floor}</td>
+                        <td>${room.category}</td>
+                        <td><span class="status-badge ${classText}">${room.status}</span></td>
+                        <td><span class="status-badge ${room.housekeeping.toLowerCase()}">${room.housekeeping}</span></td>
+                        <td><span style="color:#ef4444; font-size:12px;">${room.maintenanceIssue || 'None'}</span></td>
+                    </tr>
+                `;
+            });
+
+            // Render requests table
+            requests.forEach(req => {
+                const isPending = req.status === 'Pending';
+                requestsBody.innerHTML += `
+                    <tr>
+                        <td><strong>${req.id}</strong></td>
+                        <td>Room ${req.roomNumber}</td>
+                        <td>${req.item}</td>
+                        <td>${new Date(req.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</td>
+                        <td><span class="status-badge ${isPending ? 'pending' : 'clean'}">${req.status}</span></td>
+                        <td>
+                            ${isPending ? `
+                                <button class="btn-action btn-action-primary" style="background:#10b981; color:#fff;" onclick="resolveRequest('${req.id}')">Complete</button>
+                            ` : '<span style="color:#64748b;">Resolved</span>'}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Fallback empty states
+            if (arrivalsCount === 0) {
+                arrivalsBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:rgba(0,0,0,0.4);">No pending arrivals expected today.</td></tr>`;
+            }
+            if (activeCount === 0) {
+                departuresBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:rgba(0,0,0,0.4);">No checked-in guests in-house.</td></tr>`;
+            }
+            if (requests.length === 0) {
+                requestsBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:rgba(0,0,0,0.4);">No concierge request logs active.</td></tr>`;
+            }
+
+            // Update stats & badges
+            document.getElementById('statArrivals').textContent = arrivalsCount;
+            document.getElementById('statActive').textContent = activeCount;
+            document.getElementById('statAvailable').textContent = availableCount;
+            document.getElementById('badgeArrivals').textContent = arrivalsCount;
+            document.getElementById('badgeDepartures').textContent = activeCount;
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        function checkInGuest(bookingId) {
+            const selectEl = document.getElementById(`alloc-${bookingId}`);
+            const roomNum = selectEl ? selectEl.value : '';
+
+            if (!roomNum) {
+                alert('Please select an available clean room number to allocate.');
+                return;
+            }
+
+            let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const idx = bookings.findIndex(b => b.id === bookingId);
+            
+            if (idx > -1) {
+                const b = bookings[idx];
+                b.status = 'Checked In';
+                b.roomNumber = roomNum;
+
+                // Sync back to guest profile array
+                const userEmail = b.guestInfo ? b.guestInfo.email.toLowerCase() : '';
+                if (userEmail) {
+                    const key = `bookings_${userEmail}`;
+                    let userBookings = JSON.parse(localStorage.getItem(key) || '[]');
+                    const uIdx = userBookings.findIndex(ub => ub.id === bookingId);
+                    if (uIdx > -1) {
+                        userBookings[uIdx].status = 'Checked In';
+                        userBookings[uIdx].roomNumber = roomNum;
+                        localStorage.setItem(key, JSON.stringify(userBookings));
+                    }
+                }
+
+                // Update room status registry to Occupied
+                let registry = JSON.parse(localStorage.getItem('roomRegistry') || '{}');
+                if (registry[roomNum]) {
+                    registry[roomNum].status = 'Occupied';
+                    localStorage.setItem('roomRegistry', JSON.stringify(registry));
+                }
+
+                // Log audit & alert
+                const user = window.getCurrentUser();
+                const operator = user ? user.email : 'reception@flexstays.com';
+
+                if (window.addAuditLog) {
+                    window.addAuditLog(operator, `Checked in guest (${b.guestInfo ? b.guestInfo.email : 'alex@vanderbilt.com'}) to Room ${roomNum}`);
+                }
+                if (window.addNotification) {
+                    window.addNotification(`Guest checked in to Room ${roomNum}`, ['reception', 'admin', 'housekeeping', 'manager']);
+                }
+
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            }
+        }
+
+        function checkOutGuest(bookingId) {
+            let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const idx = bookings.findIndex(b => b.id === bookingId);
+
+            if (idx > -1) {
+                const b = bookings[idx];
+                const roomNum = b.roomNumber;
+                b.status = 'Checked Out';
+
+                // Sync back to guest profile array
+                const userEmail = b.guestInfo ? b.guestInfo.email.toLowerCase() : '';
+                if (userEmail) {
+                    const key = `bookings_${userEmail}`;
+                    let userBookings = JSON.parse(localStorage.getItem(key) || '[]');
+                    const uIdx = userBookings.findIndex(ub => ub.id === bookingId);
+                    if (uIdx > -1) {
+                        userBookings[uIdx].status = 'Checked Out';
+                        localStorage.setItem(key, JSON.stringify(userBookings));
+                    }
+                }
+
+                // Update room registry: status Available, housekeeping Dirty!
+                let registry = JSON.parse(localStorage.getItem('roomRegistry') || '{}');
+                if (registry[roomNum]) {
+                    registry[roomNum].status = 'Available';
+                    registry[roomNum].housekeeping = 'Dirty';
+                    localStorage.setItem('roomRegistry', JSON.stringify(registry));
+                }
+
+                // Log audit & alert
+                const user = window.getCurrentUser();
+                const operator = user ? user.email : 'reception@flexstays.com';
+
+                if (window.addAuditLog) {
+                    window.addAuditLog(operator, `Checked out Room ${roomNum} (Guest: ${userEmail})`);
+                }
+                if (window.addNotification) {
+                    window.addNotification(`Room ${roomNum} checked out, marked Dirty for Housekeeping`, ['housekeeping', 'admin', 'reception']);
+                }
+
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            }
+        }
+
+        function resolveRequest(requestId) {
+            let requests = JSON.parse(localStorage.getItem('guestRequests') || '[]');
+            const idx = requests.findIndex(r => r.id === requestId);
+            if (idx > -1) {
+                requests[idx].status = 'Resolved';
+                localStorage.setItem('guestRequests', JSON.stringify(requests));
+                
+                const user = window.getCurrentUser();
+                const operator = user ? user.email : 'reception@flexstays.com';
+                if (window.addAuditLog) {
+                    window.addAuditLog(operator, `Resolved guest request ticket ${requestId} for Room ${requests[idx].roomNumber}`);
+                }
+
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            }
+        }
+    </script>
+</body>
+</html>

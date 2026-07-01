@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housekeeping Workspace | Flex-Stays</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .dashboard-layout {
+            display: flex;
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
+            background: #faf9f6;
+        }
+        
+        .dashboard-sidebar {
+            width: 280px;
+            background: #0d2a2a;
+            color: #fff;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(10, 191, 172, 0.2);
+            flex-shrink: 0;
+        }
+        
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #0ABFAC;
+            color: #0d2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .user-info h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+        }
+        
+        .user-info p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .menu-link-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .menu-link i {
+            width: 18px;
+            height: 18px;
+            color: rgba(255,255,255,0.6);
+            transition: color 0.2s;
+        }
+        
+        .menu-link:hover {
+            background: rgba(10, 191, 172, 0.1);
+            color: #0ABFAC;
+        }
+        
+        .menu-link:hover i {
+            color: #0ABFAC;
+        }
+        
+        .menu-link.active {
+            background: #0ABFAC;
+            color: #0d2a2a;
+            font-weight: 600;
+        }
+        
+        .menu-link.active i {
+            color: #0d2a2a;
+        }
+        
+        .menu-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .menu-link.active .menu-badge {
+            background: #0d2a2a;
+            color: #0ABFAC;
+        }
+        
+        .dashboard-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        
+        .dashboard-panel {
+            display: none;
+            animation: fadeInPanel 0.4s ease forwards;
+        }
+        
+        .dashboard-panel.active {
+            display: block;
+        }
+        
+        @keyframes fadeInPanel {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dashboard-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header-row h1 {
+            font-family: 'Playfair Display', serif;
+            color: #0d2a2a;
+            font-size: 32px;
+            margin: 0;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .stat-card-left h4 {
+            margin: 0;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .stat-card-left p {
+            margin: 8px 0 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0d2a2a;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(10, 191, 172, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #09a898;
+        }
+
+        .panel-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            margin-bottom: 30px;
+        }
+        
+        .panel-card-title {
+            font-family: 'Poppins', sans-serif;
+            color: #0d2a2a;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .custom-table th {
+            padding: 14px 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .custom-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--text-main);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-badge.dirty {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .status-badge.cleaning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+        .status-badge.clean {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+        .btn-action-primary {
+            background: #0ABFAC;
+            color: #0d2a2a;
+        }
+        .btn-action-primary:hover {
+            background: #09a898;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            border-color: #0ABFAC;
+        }
+
+        .btn-submit {
+            background: #0d2a2a;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-submit:hover {
+            background: #0ABFAC;
+            color: #0d2a2a;
+        }
+
+        @media (max-width: 991px) {
+            .dashboard-layout { flex-direction: column; }
+            .dashboard-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(10, 191, 172, 0.2); }
+            .dashboard-content { padding: 24px; }
+        }
+    </style>
+</head>
+<body class="bg-cream">
+
+    <!-- Header Navbar -->
+    <nav class="navbar scrolled" id="navbar" style="position: fixed; background: #0d2a2a;">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon" style="border-color:#0ABFAC; background:rgba(10,191,172,0.15);">
+                    <i data-lucide="hotel" style="color:#0ABFAC;"></i>
+                </div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <span class="nav-item" style="color:rgba(255,255,255,0.5);">Hotel Operations Console</span>
+            </div>
+            <div class="nav-actions">
+                <!-- Notifications Bell injected dynamically -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Main Layout -->
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-user">
+                <div class="user-avatar">H</div>
+                <div class="user-info">
+                    <h3 id="staffName">Chief Housekeeper</h3>
+                    <p id="staffRole">Housekeeping Dept</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <div class="menu-link active" data-target="panel-dirty">
+                    <div class="menu-link-left">
+                        <i data-lucide="trash-2"></i>
+                        <span>Dirty Rooms</span>
+                    </div>
+                    <span class="menu-badge" id="badgeDirty">0</span>
+                </div>
+                <div class="menu-link" data-target="panel-cleaning">
+                    <div class="menu-link-left">
+                        <i data-lucide="sparkles"></i>
+                        <span>Cleaning In Progress</span>
+                    </div>
+                    <span class="menu-badge" id="badgeCleaning">0</span>
+                </div>
+                <div class="menu-link" data-target="panel-ready">
+                    <div class="menu-link-left">
+                        <i data-lucide="check-circle"></i>
+                        <span>Ready Rooms</span>
+                    </div>
+                    <span class="menu-badge" id="badgeReady">0</span>
+                </div>
+                <div class="menu-link" data-target="panel-maintenance">
+                    <div class="menu-link-left">
+                        <i data-lucide="wrench"></i>
+                        <span>Maintenance Report</span>
+                    </div>
+                </div>
+                <div class="menu-link" data-target="panel-laundry">
+                    <div class="menu-link-left">
+                        <i data-lucide="shirt"></i>
+                        <span>Laundry Requests</span>
+                    </div>
+                </div>
+                <div class="menu-link" data-target="panel-lostfound">
+                    <div class="menu-link-left">
+                        <i data-lucide="archive"></i>
+                        <span>Lost & Found</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Content Panels -->
+        <main class="dashboard-content">
+            
+            <!-- Statistics Row -->
+            <div class="cards-grid">
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Dirty Rooms</h4>
+                        <p id="statDirty">0</p>
+                    </div>
+                    <div class="stat-card-icon"><i data-lucide="trash-2"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Cleaning</h4>
+                        <p id="statCleaning">0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#d97706; background:rgba(245,158,11,0.1);"><i data-lucide="sparkles"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Clean Rooms</h4>
+                        <p id="statReady">0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#10b981; background:rgba(16,185,129,0.1);"><i data-lucide="check-circle"></i></div>
+                </div>
+            </div>
+
+            <!-- Panel 1: Dirty Rooms -->
+            <section class="dashboard-panel active" id="panel-dirty">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Pending Room Cleaning tasks</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Room #</th>
+                                    <th>Floor</th>
+                                    <th>Category</th>
+                                    <th>Guest Status</th>
+                                    <th>Service Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dirtyRoomsBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 2: Cleaning In Progress -->
+            <section class="dashboard-panel" id="panel-cleaning">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Rooms Currently Being Serviced</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Room #</th>
+                                    <th>Floor</th>
+                                    <th>Category</th>
+                                    <th>Cleaning Assigned</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cleaningRoomsBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 3: Ready Rooms -->
+            <section class="dashboard-panel" id="panel-ready">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Cleaned & Available Rooms</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Room #</th>
+                                    <th>Floor</th>
+                                    <th>Category</th>
+                                    <th>Guest occupancy</th>
+                                    <th>Housekeeping Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="readyRoomsBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 4: Maintenance Reporting -->
+            <section class="dashboard-panel" id="panel-maintenance">
+                <div class="panel-card" style="max-width: 600px;">
+                    <h3 class="panel-card-title">Report Maintenance / Facility Defect</h3>
+                    <form id="maintenanceReportForm">
+                        <div class="form-group">
+                            <label for="maintRoom">Select Room</label>
+                            <select class="form-control" id="maintRoom" required>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintPriority">Priority Level</label>
+                            <select class="form-control" id="maintPriority">
+                                <option value="Low">Low (Minor inspection)</option>
+                                <option value="Medium" selected>Medium (Standard repair)</option>
+                                <option value="High">High (Urgent - Action Required)</option>
+                                <option value="Emergency">Emergency (Immediate Hazard)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintDesc">Description of defect / repair needed</label>
+                            <textarea class="form-control" id="maintDesc" rows="4" placeholder="e.g. AC leaking water, broken bathroom lock, lightbulb fused..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Submit Maintenance Request</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Panel 5: Laundry Requests -->
+            <section class="dashboard-panel" id="panel-laundry">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Guest Laundry Ticket Logger</h3>
+                    <form id="laundryForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:30px; align-items:flex-end;">
+                        <div class="form-group" style="margin:0;">
+                            <label>Room #</label>
+                            <input type="text" class="form-control" id="laundryRoom" placeholder="e.g. 104" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>Guest Name</label>
+                            <input type="text" class="form-control" id="laundryGuest" placeholder="e.g. Alexander V." required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>Service Items description</label>
+                            <input type="text" class="form-control" id="laundryDesc" placeholder="e.g. 3 shirts, 2 trousers" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="height:42px; padding:0 20px;">Log Ticket</button>
+                    </form>
+
+                    <h4 style="margin: 20px 0 10px; color:#0d2a2a;">Logged Laundry Tickets</h4>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>Room #</th>
+                                    <th>Guest</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Date Logged</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="laundryTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 6: Lost & Found -->
+            <section class="dashboard-panel" id="panel-lostfound">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Lost & Found Registry</h3>
+                    <form id="lostForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:30px; align-items:flex-end;">
+                        <div class="form-group" style="margin:0;">
+                            <label>Found in Room #</label>
+                            <input type="text" class="form-control" id="lostRoom" placeholder="e.g. 302" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>Item Description</label>
+                            <input type="text" class="form-control" id="lostItem" placeholder="e.g. Black leather wallet, iPhone charger" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="height:42px; padding:0 20px;">Log Item</button>
+                    </form>
+
+                    <h4 style="margin: 20px 0 10px; color:#0d2a2a;">Registry List</h4>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Item ID</th>
+                                    <th>Room #</th>
+                                    <th>Description</th>
+                                    <th>Date Logged</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lostTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Shared Session scripts -->
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = window.getCurrentUser();
+            if (user) {
+                document.getElementById('staffName').textContent = user.firstName + ' ' + (user.lastName || '');
+            }
+
+            // Tab Panels Toggle
+            const menuLinks = document.querySelectorAll('.menu-link');
+            const panels = document.querySelectorAll('.dashboard-panel');
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    panels.forEach(p => p.classList.remove('active'));
+                    
+                    link.classList.add('active');
+                    const target = link.getAttribute('data-target');
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+
+            // Form Submit for Maintenance reporting
+            const maintForm = document.getElementById('maintenanceReportForm');
+            maintForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const roomNum = document.getElementById('maintRoom').value;
+                const priority = document.getElementById('maintPriority').value;
+                const desc = document.getElementById('maintDesc').value;
+
+                let registry = JSON.parse(localStorage.getItem('roomRegistry') || '{}');
+                if (registry[roomNum]) {
+                    // Update room status
+                    registry[roomNum].status = 'Maintenance';
+                    registry[roomNum].housekeeping = 'Dirty';
+                    registry[roomNum].maintenanceIssue = desc;
+                    localStorage.setItem('roomRegistry', JSON.stringify(registry));
+
+                    // Add Maintenance request
+                    let requests = JSON.parse(localStorage.getItem('maintenanceRequests') || '[]');
+                    const newReq = {
+                        id: 'MNT' + Math.floor(1000 + Math.random() * 9000),
+                        roomNumber: roomNum,
+                        priority: priority,
+                        description: desc,
+                        reportedBy: user ? user.email : 'housekeeping@flexstays.com',
+                        reportedAt: new Date().toISOString(),
+                        status: 'Open'
+                    };
+                    requests.push(newReq);
+                    localStorage.setItem('maintenanceRequests', JSON.stringify(requests));
+
+                    // Alert other staff & log audit
+                    if (window.addNotification) {
+                        window.addNotification(`Room ${roomNum} reported under Maintenance (${priority}): ${desc}`, ['admin', 'maintenance', 'manager', 'reception']);
+                    }
+                    if (window.addAuditLog) {
+                        window.addAuditLog(user ? user.email : 'housekeeping@flexstays.com', `Logged maintenance issue on Room ${roomNum}: ${desc}`);
+                    }
+
+                    // Reset form and alert success
+                    maintForm.reset();
+                    alert('Maintenance request submitted successfully! Room has been temporarily isolated from inventory.');
+                    loadData();
+                    window.dispatchEvent(new Event('storage'));
+                }
+            });
+
+            // Form Submit for Laundry requests
+            const laundryForm = document.getElementById('laundryForm');
+            laundryForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const roomNum = document.getElementById('laundryRoom').value;
+                const guestName = document.getElementById('laundryGuest').value;
+                const desc = document.getElementById('laundryDesc').value;
+
+                let tickets = JSON.parse(localStorage.getItem('laundryTickets') || '[]');
+                tickets.unshift({
+                    id: 'LND' + Math.floor(1000 + Math.random() * 9000),
+                    roomNumber: roomNum,
+                    guest: guestName,
+                    description: desc,
+                    status: 'Pending',
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('laundryTickets', JSON.stringify(tickets));
+
+                laundryForm.reset();
+                loadData();
+            });
+
+            // Form Submit for Lost & Found items
+            const lostForm = document.getElementById('lostForm');
+            lostForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const roomNum = document.getElementById('lostRoom').value;
+                const desc = document.getElementById('lostItem').value;
+
+                let items = JSON.parse(localStorage.getItem('lostFoundItems') || '[]');
+                items.unshift({
+                    id: 'LST' + Math.floor(1000 + Math.random() * 9000),
+                    roomNumber: roomNum,
+                    description: desc,
+                    status: 'Unclaimed',
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('lostFoundItems', JSON.stringify(items));
+
+                lostForm.reset();
+                loadData();
+            });
+
+            // LocalStorage sync handler
+            window.addEventListener('storage', (e) => {
+                if (['roomRegistry', 'maintenanceRequests', 'laundryTickets', 'lostFoundItems'].includes(e.key)) {
+                    loadData();
+                }
+            });
+
+            // Load registry
+            loadData();
+        });
+
+        function loadData() {
+            const registry = JSON.parse(localStorage.getItem('roomRegistry') || '{}');
+            const laundryTickets = JSON.parse(localStorage.getItem('laundryTickets') || '[]');
+            const lostFound = JSON.parse(localStorage.getItem('lostFoundItems') || '[]');
+
+            let dirtyCount = 0;
+            let cleaningCount = 0;
+            let readyCount = 0;
+
+            const dirtyBody = document.getElementById('dirtyRoomsBody');
+            const cleaningBody = document.getElementById('cleaningRoomsBody');
+            const readyBody = document.getElementById('readyRoomsBody');
+            const roomSelector = document.getElementById('maintRoom');
+
+            dirtyBody.innerHTML = '';
+            cleaningBody.innerHTML = '';
+            readyBody.innerHTML = '';
+            roomSelector.innerHTML = '<option value="">-- Select Room Number --</option>';
+
+            // Sort rooms by floor then number
+            const rooms = Object.keys(registry).sort((a,b) => parseInt(a) - parseInt(b));
+
+            rooms.forEach(roomNum => {
+                const room = registry[roomNum];
+                
+                // Populate room selector in maintenance panel
+                const opt = document.createElement('option');
+                opt.value = roomNum;
+                opt.textContent = `Room ${roomNum} (${room.category})`;
+                roomSelector.appendChild(opt);
+
+                if (room.status === 'Maintenance') {
+                    return; // Skip maintenance rooms from standard service boards
+                }
+
+                if (room.housekeeping === 'Dirty') {
+                    dirtyCount++;
+                    dirtyBody.innerHTML += `
+                        <tr>
+                            <td><strong>${roomNum}</strong></td>
+                            <td>Floor ${room.floor}</td>
+                            <td>${room.category}</td>
+                            <td>${room.status === 'Occupied' ? '<span style="color:#d97706;font-weight:600;">Stayover</span>' : '<span style="color:#64748b;">Vacant Check-out</span>'}</td>
+                            <td><span class="status-badge dirty">Dirty</span></td>
+                            <td>
+                                <button class="btn-action btn-action-primary" onclick="changeHKStatus('${roomNum}', 'Cleaning')">Start Cleaning</button>
+                            </td>
+                        </tr>
+                    `;
+                } else if (room.housekeeping === 'Cleaning') {
+                    cleaningCount++;
+                    cleaningBody.innerHTML += `
+                        <tr>
+                            <td><strong>${roomNum}</strong></td>
+                            <td>Floor ${room.floor}</td>
+                            <td>${room.category}</td>
+                            <td>Chief Housekeeper</td>
+                            <td>
+                                <button class="btn-action btn-action-primary" style="background:#10b981; color:#fff;" onclick="changeHKStatus('${roomNum}', 'Clean')">Finish Service</button>
+                            </td>
+                        </tr>
+                    `;
+                } else if (room.housekeeping === 'Clean') {
+                    readyCount++;
+                    readyBody.innerHTML += `
+                        <tr>
+                            <td><strong>${roomNum}</strong></td>
+                            <td>Floor ${room.floor}</td>
+                            <td>${room.category}</td>
+                            <td>${room.status === 'Occupied' ? '<span style="color:#2e7d32; font-weight:600;">Occupied (Clean)</span>' : '<span style="color:#0284c7; font-weight:600;">Vacant Ready</span>'}</td>
+                            <td><span class="status-badge clean">Clean</span></td>
+                        </tr>
+                    `;
+                }
+            });
+
+            // Fallbacks for empty states
+            if (dirtyCount === 0) {
+                dirtyBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 24px; color:rgba(0,0,0,0.4);">🎉 Excellent! All checked-out and dirty rooms have been serviced.</td></tr>`;
+            }
+            if (cleaningCount === 0) {
+                cleaningBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px; color:rgba(0,0,0,0.4);">No rooms actively cleaning in progress.</td></tr>`;
+            }
+            if (readyCount === 0) {
+                readyBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px; color:rgba(0,0,0,0.4);">No clean rooms in record. Check-out loop required.</td></tr>`;
+            }
+
+            // Update stats
+            document.getElementById('statDirty').textContent = dirtyCount;
+            document.getElementById('statCleaning').textContent = cleaningCount;
+            document.getElementById('statReady').textContent = readyCount;
+            document.getElementById('badgeDirty').textContent = dirtyCount;
+            document.getElementById('badgeCleaning').textContent = cleaningCount;
+            document.getElementById('badgeReady').textContent = readyCount;
+
+            // Render laundry tickets
+            const laundryBody = document.getElementById('laundryTableBody');
+            laundryBody.innerHTML = '';
+            if (laundryTickets.length === 0) {
+                laundryBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; color:rgba(0,0,0,0.4);">No laundry logs active.</td></tr>`;
+            } else {
+                laundryTickets.forEach(ticket => {
+                    let nextBtn = '';
+                    if (ticket.status === 'Pending') {
+                        nextBtn = `<button class="btn-action btn-action-primary" onclick="updateLaundryStatus('${ticket.id}', 'Cleaning')">Mark Picked Up</button>`;
+                    } else if (ticket.status === 'Cleaning') {
+                        nextBtn = `<button class="btn-action btn-action-primary" style="background:#10b981; color:#fff;" onclick="updateLaundryStatus('${ticket.id}', 'Returned')">Mark Returned</button>`;
+                    } else {
+                        nextBtn = `<span style="color:#10b981; font-weight:600;">Returned</span>`;
+                    }
+
+                    laundryBody.innerHTML += `
+                        <tr>
+                            <td><strong>${ticket.id}</strong></td>
+                            <td>Room ${ticket.roomNumber}</td>
+                            <td>${ticket.guest}</td>
+                            <td>${ticket.description}</td>
+                            <td><span class="status-badge ${ticket.status === 'Returned' ? 'clean' : 'cleaning'}">${ticket.status}</span></td>
+                            <td>${new Date(ticket.timestamp).toLocaleDateString()}</td>
+                            <td>${nextBtn}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // Render Lost & Found items
+            const lostBody = document.getElementById('lostTableBody');
+            lostBody.innerHTML = '';
+            if (lostFound.length === 0) {
+                lostBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px; color:rgba(0,0,0,0.4);">No items logged.</td></tr>`;
+            } else {
+                lostFound.forEach(item => {
+                    lostBody.innerHTML += `
+                        <tr>
+                            <td><strong>${item.id}</strong></td>
+                            <td>Room ${item.roomNumber}</td>
+                            <td>${item.description}</td>
+                            <td>${new Date(item.timestamp).toLocaleDateString()}</td>
+                            <td><span class="status-badge ${item.status === 'Claimed' ? 'clean' : 'dirty'}">${item.status}</span></td>
+                            <td>
+                                ${item.status === 'Unclaimed' ? `
+                                    <button class="btn-action btn-action-primary" style="background:#10b981; color:#fff;" onclick="claimLostItem('${item.id}')">Mark Claimed</button>
+                                ` : '<span style="color:#64748b;">Resolved</span>'}
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        function changeHKStatus(roomNum, newStatus) {
+            let registry = JSON.parse(localStorage.getItem('roomRegistry') || '{}');
+            if (registry[roomNum]) {
+                const prev = registry[roomNum].housekeeping;
+                registry[roomNum].housekeeping = newStatus;
+
+                // If marked Clean and room is vacant, make sure it is marked Available in status
+                if (newStatus === 'Clean' && registry[roomNum].status !== 'Occupied') {
+                    registry[roomNum].status = 'Available';
+                }
+
+                localStorage.setItem('roomRegistry', JSON.stringify(registry));
+
+                // Log audit logs and notifications
+                const staff = window.getCurrentUser() ? window.getCurrentUser().email : 'housekeeper';
+                if (window.addAuditLog) {
+                    window.addAuditLog(staff, `Room ${roomNum} cleanliness status updated: ${prev} -> ${newStatus}`);
+                }
+
+                if (newStatus === 'Clean' && window.addNotification) {
+                    window.addNotification(`Room ${roomNum} is now Cleaned & Ready for check-in.`, ['reception', 'admin', 'manager']);
+                }
+
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            }
+        }
+
+        function updateLaundryStatus(ticketId, newStatus) {
+            let tickets = JSON.parse(localStorage.getItem('laundryTickets') || '[]');
+            const idx = tickets.findIndex(t => t.id === ticketId);
+            if (idx > -1) {
+                tickets[idx].status = newStatus;
+                localStorage.setItem('laundryTickets', JSON.stringify(tickets));
+                
+                const staff = window.getCurrentUser() ? window.getCurrentUser().email : 'housekeeper';
+                if (window.addAuditLog) {
+                    window.addAuditLog(staff, `Laundry ticket ${ticketId} status changed to: ${newStatus}`);
+                }
+
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            }
+        }
+
+        function claimLostItem(itemId) {
+            let items = JSON.parse(localStorage.getItem('lostFoundItems') || '[]');
+            const idx = items.findIndex(i => i.id === itemId);
+            if (idx > -1) {
+                items[idx].status = 'Claimed';
+                localStorage.setItem('lostFoundItems', JSON.stringify(items));
+                
+                const staff = window.getCurrentUser() ? window.getCurrentUser().email : 'housekeeper';
+                if (window.addAuditLog) {
+                    window.addAuditLog(staff, `Lost & Found item ${itemId} claimed by guest`);
+                }
+
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            }
+        }
+    </script>
+</body>
+</html>

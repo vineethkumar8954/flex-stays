@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Workspace | Flex-Stays</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .dashboard-layout {
+            display: flex;
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
+            background: #faf9f6;
+        }
+        
+        .dashboard-sidebar {
+            width: 280px;
+            background: #0d2a2a;
+            color: #fff;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(10, 191, 172, 0.2);
+            flex-shrink: 0;
+        }
+        
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #0ABFAC;
+            color: #0d2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .user-info h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+        }
+        
+        .user-info p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .menu-link-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .menu-link i {
+            width: 18px;
+            height: 18px;
+            color: rgba(255,255,255,0.6);
+            transition: color 0.2s;
+        }
+        
+        .menu-link:hover {
+            background: rgba(10, 191, 172, 0.1);
+            color: #0ABFAC;
+        }
+        
+        .menu-link:hover i {
+            color: #0ABFAC;
+        }
+        
+        .menu-link.active {
+            background: #0ABFAC;
+            color: #0d2a2a;
+            font-weight: 600;
+        }
+        
+        .menu-link.active i {
+            color: #0d2a2a;
+        }
+        
+        .menu-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .menu-link.active .menu-badge {
+            background: #0d2a2a;
+            color: #0ABFAC;
+        }
+        
+        .dashboard-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        
+        .dashboard-panel {
+            display: none;
+            animation: fadeInPanel 0.4s ease forwards;
+        }
+        
+        .dashboard-panel.active {
+            display: block;
+        }
+        
+        @keyframes fadeInPanel {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dashboard-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header-row h1 {
+            font-family: 'Playfair Display', serif;
+            color: #0d2a2a;
+            font-size: 32px;
+            margin: 0;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .stat-card-left h4 {
+            margin: 0;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .stat-card-left p {
+            margin: 8px 0 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0d2a2a;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(10, 191, 172, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #09a898;
+        }
+
+        .panel-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            margin-bottom: 30px;
+        }
+        
+        .panel-card-title {
+            font-family: 'Poppins', sans-serif;
+            color: #0d2a2a;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .custom-table th {
+            padding: 14px 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .custom-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--text-main);
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .priority-badge.low {
+            background: rgba(100, 116, 139, 0.1);
+            color: #64748b;
+        }
+        .priority-badge.medium {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+        .priority-badge.high {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .priority-badge.emergency {
+            background: #ef4444;
+            color: #fff;
+            animation: pulseEmergency 1.5s infinite;
+        }
+
+        @keyframes pulseEmergency {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+        .btn-action-primary {
+            background: #0ABFAC;
+            color: #0d2a2a;
+        }
+        .btn-action-primary:hover {
+            background: #09a898;
+        }
+
+        @media (max-width: 991px) {
+            .dashboard-layout { flex-direction: column; }
+            .dashboard-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(10, 191, 172, 0.2); }
+            .dashboard-content { padding: 24px; }
+        }
+    </style>
+</head>
+<body class="bg-cream">
+
+    <!-- Header Navbar -->
+    <nav class="navbar scrolled" id="navbar" style="position: fixed; background: #0d2a2a;">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon" style="border-color:#0ABFAC; background:rgba(10,191,172,0.15);">
+                    <i data-lucide="hotel" style="color:#0ABFAC;"></i>
+                </div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <span class="nav-item" style="color:rgba(255,255,255,0.5);">Hotel Operations Console</span>
+            </div>
+            <div class="nav-actions">
+                <!-- Notifications bell injected dynamically -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Main Layout -->
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-user">
+                <div class="user-avatar">M</div>
+                <div class="user-info">
+                    <h3 id="staffName">Lead Maintenance</h3>
+                    <p id="staffRole">Facilities Dept</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <div class="menu-link active" data-target="panel-open">
+                    <div class="menu-link-left">
+                        <i data-lucide="alert-triangle"></i>
+                        <span>Open Issues</span>
+                    </div>
+                    <span class="menu-badge" id="badgeOpen">0</span>
+                </div>
+                <div class="menu-link" data-target="panel-resolved">
+                    <div class="menu-link-left">
+                        <i data-lucide="check-circle"></i>
+                        <span>Resolved Issues</span>
+                    </div>
+                    <span class="menu-badge" id="badgeResolved">0</span>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Content Panels -->
+        <main class="dashboard-content">
+            
+            <!-- Statistics Row -->
+            <div class="cards-grid">
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Open Defects</h4>
+                        <p id="statOpen">0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#ef4444; background:rgba(239,68,68,0.1);"><i data-lucide="alert-triangle"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Repairing</h4>
+                        <p id="statWorking">0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#d97706; background:rgba(245,158,11,0.1);"><i data-lucide="hammer"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Resolved Stays</h4>
+                        <p id="statResolved">0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#10b981; background:rgba(16,185,129,0.1);"><i data-lucide="check-circle"></i></div>
+                </div>
+            </div>
+
+            <!-- Panel 1: Open Issues -->
+            <section class="dashboard-panel active" id="panel-open">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Pending Maintenance & Repairs Tasks</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Task ID</th>
+                                    <th>Room #</th>
+                                    <th>Priority</th>
+                                    <th>Description</th>
+                                    <th>Logged By</th>
+                                    <th>Date Logged</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="openRequestsBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 2: Resolved Issues -->
+            <section class="dashboard-panel" id="panel-resolved">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Completed Repairs History Log</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Task ID</th>
+                                    <th>Room #</th>
+                                    <th>Priority</th>
+                                    <th>Description</th>
+                                    <th>Resolved By</th>
+                                    <th>Date Resolved</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resolvedRequestsBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Shared Session scripts -->
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = window.getCurrentUser();
+            if (user) {
+                document.getElementById('staffName').textContent = user.firstName + ' ' + (user.lastName || '');
+            }
+
+            // Tab Panels Toggle
+            const menuLinks = document.querySelectorAll('.menu-link');
+            const panels = document.querySelectorAll('.dashboard-panel');
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    panels.forEach(p => p.classList.remove('active'));
+                    
+                    link.classList.add('active');
+                    const target = link.getAttribute('data-target');
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+
+            // LocalStorage sync handler
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'maintenanceRequests' || e.key === 'roomRegistry') {
+                    loadData();
+                }
+            });
+
+            // Initial load
+            loadData();
+        });
+
+        function loadData() {
+            const requests = JSON.parse(localStorage.getItem('maintenanceRequests') || '[]');
+            
+            let openCount = 0;
+            let workingCount = 0;
+            let resolvedCount = 0;
+
+            const openBody = document.getElementById('openRequestsBody');
+            const resolvedBody = document.getElementById('resolvedRequestsBody');
+
+            openBody.innerHTML = '';
+            resolvedBody.innerHTML = '';
+
+            requests.forEach(req => {
+                if (req.status === 'Resolved') {
+                    resolvedCount++;
+                    resolvedBody.innerHTML += `
+                        <tr>
+                            <td><strong>${req.id}</strong></td>
+                            <td>Room ${req.roomNumber}</td>
+                            <td><span class="priority-badge ${req.priority.toLowerCase()}">${req.priority}</span></td>
+                            <td>${req.description}</td>
+                            <td>${req.resolvedBy || 'Lead Maintenance'}</td>
+                            <td>${new Date(req.resolvedAt).toLocaleString()}</td>
+                            <td><span class="priority-badge low" style="color:#10b981;background:rgba(16,185,129,0.1);">Resolved</span></td>
+                        </tr>
+                    `;
+                } else {
+                    openCount++;
+                    if (req.status === 'In Progress') workingCount++;
+                    
+                    let actionBtn = '';
+                    if (req.status === 'Open') {
+                        actionBtn = `<button class="btn-action btn-action-primary" onclick="updateMaintStatus('${req.id}', 'In Progress')">Start Work</button>`;
+                    } else if (req.status === 'In Progress') {
+                        actionBtn = `<button class="btn-action btn-action-primary" style="background:#10b981;color:#fff;" onclick="updateMaintStatus('${req.id}', 'Resolved')">Resolve & Release Room</button>`;
+                    }
+
+                    openBody.innerHTML += `
+                        <tr>
+                            <td><strong>${req.id}</strong></td>
+                            <td>Room ${req.roomNumber}</td>
+                            <td><span class="priority-badge ${req.priority.toLowerCase()}">${req.priority}</span></td>
+                            <td>${req.description}</td>
+                            <td>${req.reportedBy}</td>
+                            <td>${new Date(req.reportedAt).toLocaleDateString()}</td>
+                            <td><span class="priority-badge ${req.status === 'In Progress' ? 'medium' : 'low'}">${req.status}</span></td>
+                            <td>${actionBtn}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            // Fallback empty states
+            if (openCount === 0) {
+                openBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:rgba(0,0,0,0.4);">🎉 Excellent! No open maintenance issues reported. All rooms fully operational.</td></tr>`;
+            }
+            if (resolvedCount === 0) {
+                resolvedBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:rgba(0,0,0,0.4);">No resolved repairs history logged yet.</td></tr>`;
+            }
+
+            // Stats
+            document.getElementById('statOpen').textContent = openCount;
+            document.getElementById('statWorking').textContent = workingCount;
+            document.getElementById('statResolved').textContent = resolvedCount;
+            document.getElementById('badgeOpen').textContent = openCount;
+            document.getElementById('badgeResolved').textContent = resolvedCount;
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        function updateMaintStatus(reqId, newStatus) {
+            let requests = JSON.parse(localStorage.getItem('maintenanceRequests') || '[]');
+            const idx = requests.findIndex(r => r.id === reqId);
+            
+            if (idx > -1) {
+                const req = requests[idx];
+                req.status = newStatus;
+                
+                const user = window.getCurrentUser();
+                const operator = user ? user.email : 'maintenance@flexstays.com';
+
+                if (newStatus === 'Resolved') {
+                    req.resolvedBy = operator;
+                    req.resolvedAt = new Date().toISOString();
+
+                    // Restore room status back to Available and Clean in Room Registry!
+                    let registry = JSON.parse(localStorage.getItem('roomRegistry') || '{}');
+                    if (registry[req.roomNumber]) {
+                        registry[req.roomNumber].status = 'Available';
+                        registry[req.roomNumber].housekeeping = 'Clean';
+                        registry[req.roomNumber].maintenanceIssue = null;
+                        localStorage.setItem('roomRegistry', JSON.stringify(registry));
+                    }
+
+                    // Alert other staff & audit log
+                    if (window.addNotification) {
+                        window.addNotification(`Room ${req.roomNumber} maintenance resolved by Lead Maintenance. Room released back to inventory.`, ['reception', 'admin', 'manager', 'housekeeping']);
+                    }
+                    if (window.addAuditLog) {
+                        window.addAuditLog(operator, `Resolved maintenance request ${reqId} on Room ${req.roomNumber}. Room marked Available.`);
+                    }
+                } else if (newStatus === 'In Progress') {
+                    if (window.addAuditLog) {
+                        window.addAuditLog(operator, `Started repair work on Room ${req.roomNumber} (Ticket: ${reqId})`);
+                    }
+                }
+
+                localStorage.setItem('maintenanceRequests', JSON.stringify(requests));
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            }
+        }
+    </script>
+</body>
+</html>

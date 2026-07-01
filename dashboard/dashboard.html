@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotex Trading Suite Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <span class="pulse"></span>
+                <h1>QuotexBot<span class="accent">.</span></h1>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot active"></div>
+                <span>Live Demo</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3>Win Rate</h3>
+                    <div class="value" id="win-rate">--%</div>
+                </div>
+                <div class="metric-card highlight">
+                    <h3>Net PnL</h3>
+                    <div class="value" id="net-pnl">$0.00</div>
+                </div>
+                <div class="metric-card">
+                    <h3>Total Trades</h3>
+                    <div class="value" id="total-trades">0</div>
+                </div>
+            </div>
+
+            <section class="trades-section">
+                <div class="section-header">
+                    <h2>Recent Trades</h2>
+                    <button id="refresh-btn" class="btn-refresh">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.5l5.25 5.25"/></svg>
+                        Refresh
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table id="trades-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Time</th>
+                                <th>Asset</th>
+                                <th>Direction</th>
+                                <th>Result</th>
+                                <th>PnL</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trades-body">
+                            <!-- Trades injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

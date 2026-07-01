@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Portal Login | Flex-Stays HMS</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS link -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .auth-container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(10, 191, 172, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 24px 64px rgba(15, 23, 42, 0.15);
+            padding: 48px;
+            color: #0f172a;
+            animation: authFadeUp 0.6s ease;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #09a898;
+            text-decoration: none;
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .auth-logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(10, 191, 172, 0.15);
+            border: 1px solid #09a898;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: #0f172a;
+            margin: 0 0 8px;
+            font-weight: 500;
+        }
+        .auth-subtitle {
+            font-size: 13.5px;
+            color: rgba(15, 23, 42, 0.65);
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            color: #09a898;
+            margin-bottom: 8px;
+        }
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-wrapper i.left-icon {
+            position: absolute;
+            left: 14px;
+            color: rgba(15, 23, 42, 0.4);
+            width: 16px;
+            height: 16px;
+            pointer-events: none;
+        }
+        .input-wrapper input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(15, 23, 42, 0.15);
+            border-radius: 8px;
+            padding: 12px 16px 12px 42px;
+            color: #0f172a;
+            font-size: 13.5px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .input-wrapper input:focus {
+            border-color: #0ABFAC;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(10, 191, 172, 0.15);
+        }
+        .input-wrapper input.has-error {
+            border-color: #ef4444;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 14px;
+            background: transparent;
+            border: none;
+            color: rgba(15, 23, 42, 0.4);
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+        .password-toggle-btn:hover {
+            color: #09a898;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .btn-auth-submit {
+            width: 100%;
+            background: #0ABFAC;
+            color: #0d2a2a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+        .btn-auth-submit:hover {
+            background: #09a898;
+            box-shadow: 0 8px 24px rgba(10, 191, 172, 0.3);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 13.5px;
+            color: rgba(15, 23, 42, 0.65);
+        }
+        .auth-footer a {
+            color: #09a898;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Toast Alert */
+        .auth-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ef4444;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000000;
+            animation: authToastIn 0.3s ease;
+            display: none;
+        }
+        .auth-toast.show {
+            display: flex;
+        }
+
+        @keyframes authFadeUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes authToastIn {
+            from { transform: translateY(12px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        
+        <div class="auth-header">
+            <a href="index.html" class="auth-logo">
+                <div class="auth-logo-icon">
+                    <i data-lucide="hotel" style="width:16px;height:16px;"></i>
+                </div>
+                <span>Flex-Stays</span>
+            </a>
+            <h2 class="auth-title">Staff Portal</h2>
+            <p class="auth-subtitle">Sign in to access hotel operations panels</p>
+        </div>
+
+        <form id="staffLoginForm" novalidate>
+            
+            <div class="form-group">
+                <label for="email">Staff Email Address</label>
+                <div class="input-wrapper">
+                    <i data-lucide="mail" class="left-icon"></i>
+                    <input type="email" id="email" required autocomplete="email" placeholder="e.g. admin@flexstays.com">
+                </div>
+                <span class="error-message" id="emailErr">Please enter a valid email address</span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <i data-lucide="lock" class="left-icon"></i>
+                    <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••">
+                    <button type="button" class="password-toggle-btn" tabindex="-1">
+                        <i data-lucide="eye" style="width:16px;height:16px;"></i>
+                    </button>
+                </div>
+                <span class="error-message" id="passwordErr">Password is required</span>
+            </div>
+
+            <button type="submit" class="btn-auth-submit">Sign In to Workspace</button>
+
+        </form>
+
+        <div class="auth-footer">
+            Are you a guest? <a href="login.html">Guest Portal</a>
+        </div>
+
+    </div>
+
+    <!-- Error Toast -->
+    <div class="auth-toast" id="errorToast">
+        <i data-lucide="alert-circle" style="width:18px;height:18px;"></i>
+        <span id="toastMsg">Something went wrong!</span>
+    </div>
+
+    <!-- Shared Session Script -->
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // Password visibility toggle
+            const pwdToggle = document.querySelector('.password-toggle-btn');
+            if (pwdToggle) {
+                pwdToggle.addEventListener('click', () => {
+                    const input = pwdToggle.previousElementSibling;
+                    const type = input.type === 'password' ? 'text' : 'password';
+                    input.type = type;
+                    const icon = pwdToggle.querySelector('i');
+                    if (type === 'text') {
+                        icon.setAttribute('data-lucide', 'eye-off');
+                    } else {
+                        icon.setAttribute('data-lucide', 'eye');
+                    }
+                    lucide.createIcons();
+                });
+            }
+
+            // Form Submit validation and session start
+            const form = document.getElementById('staffLoginForm');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const email = document.getElementById('email');
+                const pass = document.getElementById('password');
+
+                // Clear styles
+                email.classList.remove('has-error');
+                pass.classList.remove('has-error');
+                document.getElementById('emailErr').style.display = 'none';
+                document.getElementById('passwordErr').style.display = 'none';
+
+                let isValid = true;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(email.value.trim())) {
+                    document.getElementById('emailErr').style.display = 'block';
+                    email.classList.add('has-error');
+                    isValid = false;
+                }
+                if (!pass.value) {
+                    document.getElementById('passwordErr').style.display = 'block';
+                    pass.classList.add('has-error');
+                    isValid = false;
+                }
+
+                if (!isValid) return;
+
+                // Load staff users registry
+                let staffUsers = [];
+                try {
+                    staffUsers = JSON.parse(localStorage.getItem('staffUsers') || '[]');
+                } catch(e) {}
+
+                // Look for staff member matching email and password
+                const staff = staffUsers.find(s => s.email.toLowerCase() === email.value.trim().toLowerCase() && s.password === pass.value);
+
+                if (!staff) {
+                    showToast('Invalid credentials or unauthorized staff account.');
+                    pass.classList.add('has-error');
+                    return;
+                }
+
+                if (staff.status === 'Deactivated') {
+                    showToast('This staff account has been deactivated by administration.');
+                    return;
+                }
+
+                // Save Session
+                localStorage.setItem('currentUser', JSON.stringify(staff));
+
+                // Clear guest checkout
+                localStorage.removeItem('guestCheckout');
+
+                // Write audit log
+                if (window.addAuditLog) {
+                    window.addAuditLog(staff.email, `Staff logged in successfully as role: ${staff.role}`);
+                }
+
+                // Redirect to respective dashboard
+                if (window.redirectToRoleDashboard) {
+                    window.redirectToRoleDashboard(staff.role);
+                } else {
+                    window.location.href = staff.role + '-dashboard.html';
+                }
+            });
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('errorToast');
+            const msgSpan = document.getElementById('toastMsg');
+            if (toast && msgSpan) {
+                msgSpan.textContent = msg;
+                toast.classList.add('show');
+                setTimeout(() => { toast.classList.remove('show'); }, 4000);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{
+    "trades": [
+        {
+            "id": 1,
+            "timestamp": "2026-05-21 20:41:10",
+            "asset": "EURUSD",
+            "direction": "put",
+            "amount": 1,
+            "result": "win",
+            "profit_loss": 0.82
+        },
+        {
+            "id": 2,
+            "timestamp": "2026-05-21 20:41:15",
+            "asset": "EURUSD",
+            "direction": "call",
+            "amount": 1,
+            "result": "loss",
+            "profit_loss": -1
+        },
+        {
+            "id": 3,
+            "timestamp": "2026-05-21 20:41:45",
+            "asset": "EURUSD",
+            "direction": "put",
+            "amount": 1,
+            "result": "loss",
+            "profit_loss": -1
+        },
+        {
+            "id": 4,
+            "timestamp": "2026-05-21 20:41:50",
+            "asset": "EURUSD",
+            "direction": "put",
+            "amount": 1,
+            "result": "loss",
+            "profit_loss": -1
+        },
+        {
+            "id": 5,
+            "timestamp": "2026-05-21 20:42:41",
+            "asset": "EURUSD",
+            "direction": "put",
+            "amount": 1,
+            "result": "win",
+            "profit_loss": 0.82
+        }
+    ]
+}

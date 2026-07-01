@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine & Spirits Collection | Flex-Stays Luxury Hotel</title>
+    <meta name="description" content="Explore our handpicked Wine & Spirits collection at Flex-Stays. Curated red wines, white wines, and premium spirits including Magic Moments vodka collection.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* =============================================
+           WINE PAGE — DESIGN SYSTEM
+        ============================================= */
+        :root {
+            --wine-red: #7b1a2e;
+            --wine-gold: #d4af37;
+            --wine-cream: #faf7f2;
+            --wine-dark: #0d2a2a;
+            --glass: rgba(255,255,255,0.08);
+            --glass-border: rgba(255,255,255,0.12);
+        }
+
+        body { background: var(--wine-cream); }
+
+        /* ── HERO ── */
+        .wine-hero {
+            background: linear-gradient(135deg, #0d2a2a 0%, #1a0a14 40%, #2d0f1f 70%, #0d2a2a 100%);
+            min-height: 340px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 100px 0 60px;
+        }
+        .wine-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1400&q=60') center/cover;
+            opacity: 0.12;
+        }
+        .wine-hero::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(212,175,55,0.08) 0%, transparent 70%);
+        }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.3);
+            color: #d4af37; font-size: 11px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; padding: 6px 14px; border-radius: 20px;
+            margin-bottom: 18px;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            color: #fff; line-height: 1.15; margin-bottom: 14px;
+        }
+        .hero-title em { color: #d4af37; font-style: italic; }
+        .hero-subtitle { color: rgba(255,255,255,0.65); font-size: 16px; max-width: 520px; line-height: 1.7; }
+        .hero-stats {
+            display: flex; gap: 32px; margin-top: 32px; flex-wrap: wrap;
+        }
+        .hero-stat { text-align: center; }
+        .hero-stat-num { font-size: 26px; font-weight: 800; color: #d4af37; display: block; }
+        .hero-stat-lbl { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ── SOMMELIER BANNER ── */
+        .sommelier-banner {
+            background: linear-gradient(90deg, #0d2a2a, #1a3a2a);
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+            padding: 0;
+        }
+        .sommelier-inner {
+            display: flex; align-items: stretch; gap: 0;
+            overflow-x: auto; scrollbar-width: none;
+        }
+        .sommelier-inner::-webkit-scrollbar { display: none; }
+        .sommelier-card {
+            display: flex; align-items: center; gap: 14px;
+            padding: 18px 28px; min-width: 280px;
+            border-right: 1px solid rgba(255,255,255,0.07);
+            cursor: pointer; transition: background 0.2s;
+        }
+        .sommelier-card:hover { background: rgba(212,175,55,0.05); }
+        .sommelier-icon {
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .sommelier-text strong { display: block; color: #fff; font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+        .sommelier-text span { color: rgba(255,255,255,0.5); font-size: 11px; }
+        .sommelier-badge {
+            margin-left: auto; background: rgba(212,175,55,0.15);
+            border: 1px solid rgba(212,175,55,0.3); color: #d4af37;
+            font-size: 10px; font-weight: 700; padding: 2px 8px;
+            border-radius: 20px; white-space: nowrap;
+        }
+
+        /* ── CONTROLS BAR ── */
+        .controls-bar {
+            background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06);
+            position: sticky; top: 0; z-index: 50;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .controls-inner {
+            display: flex; align-items: center; gap: 16px;
+            padding: 14px 0; flex-wrap: wrap;
+        }
+        .search-wrap {
+            position: relative; flex: 1; min-width: 220px;
+        }
+        .search-wrap i {
+            position: absolute; left: 14px; top: 50%;
+            transform: translateY(-50%); color: #94a3b8;
+            width: 16px; height: 16px; pointer-events: none;
+        }
+        #wineSearch {
+            width: 100%; padding: 10px 16px 10px 42px;
+            border: 1px solid rgba(0,0,0,0.1); border-radius: 24px;
+            font-family: 'Inter', sans-serif; font-size: 14px; outline: none;
+            background: #f8fafc; color: #0f172a; transition: all 0.2s;
+        }
+        #wineSearch:focus {
+            border-color: var(--primary); background: #fff;
+            box-shadow: 0 0 0 3px rgba(10,191,172,0.12);
+        }
+        .filter-tabs {
+            display: flex; gap: 6px; flex-wrap: wrap;
+        }
+        .filter-tab {
+            padding: 8px 18px; border-radius: 20px; border: 1.5px solid rgba(0,0,0,0.1);
+            background: #fff; color: #64748b; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+        }
+        .filter-tab:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-tab.active {
+            background: var(--wine-dark); border-color: var(--wine-dark);
+            color: #fff; box-shadow: 0 4px 12px rgba(13,42,42,0.2);
+        }
+        .filter-tab.active[data-filter="red"] { background: #7b1a2e; border-color: #7b1a2e; }
+        .filter-tab.active[data-filter="white"] { background: #8b6914; border-color: #8b6914; }
+        .filter-tab.active[data-filter="vodka"] { background: #1e40af; border-color: #1e40af; }
+        .sort-select {
+            padding: 9px 14px; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 12px;
+            font-family: 'Inter', sans-serif; font-size: 13px; color: #0f172a;
+            background: #fff; cursor: pointer; outline: none;
+        }
+        #wineCount {
+            font-size: 12px; color: #94a3b8; white-space: nowrap; margin-left: auto;
+        }
+
+        /* ── GRID ── */
+        .wine-section { padding: 40px 0 80px; }
+        .section-label {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 28px; padding-bottom: 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
+        }
+        .section-label .label-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .section-label h2 { font-size: 20px; color: var(--wine-dark); }
+        .section-label span { font-size: 12px; color: #94a3b8; margin-left: 6px; font-weight: 400; }
+        .wine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        /* ── WINE CARD ── */
+        .wine-card {
+            background: #fff; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer; position: relative;
+        }
+        .wine-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            border-color: rgba(212,175,55,0.3);
+        }
+        .wine-img-wrap {
+            position: relative; height: 200px; overflow: hidden;
+            background: linear-gradient(135deg, #f0ebe3, #e8e0d5);
+        }
+        .wine-img-wrap img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+        .wine-card:hover .wine-img-wrap img { transform: scale(1.07); }
+        .wine-category-badge {
+            position: absolute; top: 12px; left: 12px;
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; padding: 4px 10px; border-radius: 20px;
+        }
+        .badge-red { background: rgba(123,26,46,0.9); color: #fff; }
+        .badge-white { background: rgba(139,105,20,0.9); color: #fff; }
+        .badge-vodka { background: rgba(30,64,175,0.9); color: #fff; }
+        .wine-badge-tag {
+            position: absolute; top: 12px; right: 12px;
+            font-size: 9px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.5px; padding: 3px 8px; border-radius: 20px;
+            background: rgba(212,175,55,0.95); color: #000;
+        }
+        .availability-dot {
+            position: absolute; bottom: 12px; right: 12px;
+            display: flex; align-items: center; gap: 5px;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            border-radius: 20px; padding: 4px 10px;
+            font-size: 10px; color: #fff; font-weight: 600;
+        }
+        .dot-available { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+        .dot-limited { width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; animation: blink 1.5s infinite; }
+        .dot-unavailable { width: 6px; height: 6px; border-radius: 50%; background: #ef4444; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        .wine-body { padding: 18px 18px 20px; }
+        .wine-brand { font-size: 10px; color: #d4af37; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+        .wine-name { font-size: 16px; font-weight: 700; color: var(--wine-dark); margin-bottom: 8px; line-height: 1.3; }
+        .wine-meta {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;
+        }
+        .wine-meta-pill {
+            display: flex; align-items: center; gap: 4px;
+            font-size: 11px; color: #64748b;
+            background: #f8fafc; border: 1px solid rgba(0,0,0,0.07);
+            padding: 3px 8px; border-radius: 20px;
+        }
+        .wine-meta-pill i { width: 11px; height: 11px; }
+        .wine-desc { font-size: 12px; color: #64748b; line-height: 1.6; margin-bottom: 12px; }
+        .pairings-row {
+            display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;
+        }
+        .pairing-chip {
+            font-size: 10px; color: var(--wine-dark); background: rgba(13,42,42,0.06);
+            border: 1px solid rgba(13,42,42,0.1); padding: 2px 8px; border-radius: 20px; font-weight: 600;
+        }
+        .wine-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06);
+        }
+        .wine-price { font-size: 20px; font-weight: 800; color: var(--wine-dark); }
+        .wine-price sup { font-size: 12px; font-weight: 600; vertical-align: super; }
+        .wine-rating {
+            display: flex; align-items: center; gap: 4px;
+            font-size: 12px; color: #94a3b8;
+        }
+        .wine-rating .star { color: #f59e0b; font-size: 13px; }
+        .btn-row {
+            display: flex; gap: 8px; margin-top: 14px;
+        }
+        .btn-reserve {
+            flex: 1; padding: 10px; border-radius: 10px;
+            background: linear-gradient(135deg, var(--wine-dark), #1a3a2a);
+            color: #fff; font-size: 12px; font-weight: 700;
+            border: none; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .btn-reserve:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(13,42,42,0.3); }
+        .btn-add-dining {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: rgba(212,175,55,0.1); border: 1.5px solid rgba(212,175,55,0.3);
+            color: #d4af37; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0;
+        }
+        .btn-add-dining:hover { background: #d4af37; color: #000; }
+        .btn-add-dining i { width: 16px; height: 16px; }
+
+        /* ── AI SOMMELIER CHATBOX ── */
+        .sommelier-chat-wrap {
+            background: linear-gradient(135deg, #0d2a2a 0%, #1a1020 100%);
+            border-radius: 20px; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+            border: 1px solid rgba(212,175,55,0.15);
+        }
+        .sommelier-chat-header {
+            background: linear-gradient(90deg, rgba(212,175,55,0.1), transparent);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            padding: 16px 20px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .sommelier-avatar {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .sommelier-chat-header h3 { color: #fff; font-size: 15px; margin-bottom: 2px; }
+        .sommelier-chat-header p { color: rgba(255,255,255,0.45); font-size: 11px; }
+        .live-pill {
+            margin-left: auto; background: rgba(34,197,94,0.15);
+            border: 1px solid rgba(34,197,94,0.3); color: #22c55e;
+            font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+        }
+        .chat-messages {
+            padding: 16px; min-height: 130px; max-height: 240px;
+            overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+        }
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+        .chat-msg-bot { display: flex; gap: 8px; align-items: flex-start; }
+        .chat-msg-user { display: flex; justify-content: flex-end; }
+        .bot-bubble {
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 4px 12px 12px 12px; padding: 10px 14px;
+            font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 88%;
+        }
+        .user-bubble {
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            border-radius: 12px 4px 12px 12px; padding: 10px 14px;
+            font-size: 13px; color: #000; font-weight: 600; max-width: 75%;
+        }
+        .som-mini-avatar {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .chat-chips {
+            display: flex; gap: 6px; flex-wrap: wrap;
+            padding: 0 16px 12px;
+        }
+        .chat-chip {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 600;
+            padding: 5px 12px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+        }
+        .chat-chip:hover { background: rgba(212,175,55,0.15); border-color: rgba(212,175,55,0.3); color: #d4af37; }
+        .chat-input-row {
+            display: flex; gap: 8px; align-items: center; padding: 12px 16px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        #sommelierInput {
+            flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px; padding: 10px 16px; color: #fff;
+            font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: all 0.2s;
+        }
+        #sommelierInput::placeholder { color: rgba(255,255,255,0.3); }
+        #sommelierInput:focus { border-color: rgba(212,175,55,0.4); background: rgba(255,255,255,0.1); }
+        .chat-send-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            border: none; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; flex-shrink: 0;
+            transition: all 0.2s; box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+        }
+        .chat-send-btn:hover { transform: scale(1.1); }
+        .chat-send-btn i { width: 15px; height: 15px; color: #000; }
+        @keyframes somDot { 0%,80%,100%{transform:scale(0.6);opacity:0.3} 40%{transform:scale(1);opacity:1} }
+
+        /* ── DETAIL MODAL ── */
+        .wine-modal-overlay {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .wine-modal-overlay.open { display: flex; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        .wine-modal {
+            background: #fff; border-radius: 20px; max-width: 700px; width: 100%;
+            max-height: 90vh; overflow-y: auto; position: relative;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+        .wine-modal-img {
+            height: 260px; object-fit: cover; width: 100%; border-radius: 20px 20px 0 0;
+        }
+        .wine-modal-body { padding: 28px; }
+        .wine-modal-close {
+            position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+            background: rgba(0,0,0,0.5); border: none; border-radius: 50%;
+            color: #fff; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; z-index: 5; transition: all 0.2s;
+        }
+        .wine-modal-close:hover { background: rgba(0,0,0,0.8); }
+        .modal-brand { font-size: 11px; color: #d4af37; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
+        .modal-name { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--wine-dark); margin-bottom: 16px; }
+        .modal-specs {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px; margin-bottom: 20px;
+        }
+        .modal-spec {
+            background: #f8fafc; border: 1px solid rgba(0,0,0,0.07);
+            border-radius: 10px; padding: 12px; text-align: center;
+        }
+        .modal-spec-icon { color: #d4af37; margin-bottom: 4px; }
+        .modal-spec-val { font-weight: 700; font-size: 14px; color: var(--wine-dark); display: block; }
+        .modal-spec-lbl { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .modal-desc { font-size: 14px; color: #64748b; line-height: 1.8; margin-bottom: 20px; }
+        .modal-pairings h4 { font-size: 12px; color: var(--wine-dark); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .modal-pairings-list { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+        .modal-pairing { background: rgba(13,42,42,0.06); border: 1px solid rgba(13,42,42,0.12); color: var(--wine-dark); font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; }
+        .modal-actions { display: flex; gap: 12px; }
+        .modal-btn-primary {
+            flex: 1; padding: 14px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--wine-dark), #1a3a2a);
+            color: #fff; font-size: 14px; font-weight: 700; border: none; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .modal-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(13,42,42,0.3); }
+        .modal-btn-gold {
+            flex: 1; padding: 14px; border-radius: 12px;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            color: #000; font-size: 14px; font-weight: 700; border: none; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .modal-btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212,175,55,0.4); }
+
+        /* ── TOAST ── */
+        .wine-toast {
+            position: fixed; bottom: 30px; right: 30px; z-index: 2000;
+            background: var(--wine-dark); color: #fff; border-radius: 12px;
+            padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+            font-size: 13px; font-weight: 500; max-width: 340px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: translateY(80px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-left: 3px solid #d4af37;
+        }
+        .wine-toast.show { transform: translateY(0); opacity: 1; }
+        .wine-toast-icon { color: #d4af37; flex-shrink: 0; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            text-align: center; padding: 80px 20px;
+            display: none;
+        }
+        .empty-state.show { display: block; }
+        .empty-state i { color: #e2e8f0; width: 64px; height: 64px; margin-bottom: 16px; }
+        .empty-state h3 { color: #94a3b8; font-size: 18px; margin-bottom: 8px; }
+        .empty-state p { color: #cbd5e1; font-size: 14px; }
+
+        @keyframes somDot { 0%,80%,100%{transform:scale(0.6);opacity:0.3} 40%{transform:scale(1);opacity:1} }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .wine-hero { padding: 90px 0 40px; min-height: 280px; }
+            .hero-stats { gap: 20px; }
+            .controls-inner { gap: 10px; }
+            .wine-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+            .modal-actions { flex-direction: column; }
+            .wine-modal-body { padding: 18px; }
+            .modal-name { font-size: 22px; }
+        }
+        @media (max-width: 480px) {
+            .filter-tabs { gap: 4px; }
+            .filter-tab { padding: 6px 12px; font-size: 12px; }
+            .wine-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .wine-img-wrap { height: 160px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar" id="navbar">
+    <div class="container navbar-container">
+        <a href="index.html" class="logo">
+            <div class="logo-icon"><i data-lucide="hotel"></i></div>
+            <span>Flex-Stays</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="search-results.html">Rooms</a></li>
+            <li><a href="menu.html">Dining</a></li>
+            <li><a href="wine.html" class="active">Wine &amp; Spirits</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="index.html#contact" class="btn btn-primary" style="text-decoration:none; font-size:13px;">Contact Us</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="wine-hero">
+    <div class="container hero-content">
+        <div class="hero-badge">
+            <i data-lucide="wine" style="width:12px;height:12px;"></i>
+            Flex-Stays Cellar
+        </div>
+        <h1 class="hero-title">Wine &amp; Spirits<br><em>Collection</em></h1>
+        <p class="hero-subtitle">Curated by our Master Sommelier — from the finest vineyards of France and Italy to India's best boutique estates and premium spirits.</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-num">23</span>
+                <span class="hero-stat-lbl">Bottles</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">8</span>
+                <span class="hero-stat-lbl">Countries</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">3</span>
+                <span class="hero-stat-lbl">Categories</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">4.6★</span>
+                <span class="hero-stat-lbl">Avg Rating</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== SOMMELIER BANNER ===================== -->
+<div class="sommelier-banner">
+    <div class="container">
+        <div class="sommelier-inner">
+            <div class="sommelier-card" onclick="sommelierAsk('best wine with steak and grills')">
+                <div class="sommelier-icon" style="background:rgba(123,26,46,0.2);">
+                    <span style="font-size:20px;">🥩</span>
+                </div>
+                <div class="sommelier-text">
+                    <strong>Steak &amp; Grills</strong>
+                    <span>Sommelier recommends</span>
+                </div>
+                <span class="sommelier-badge">Red Wine</span>
+            </div>
+            <div class="sommelier-card" onclick="sommelierAsk('best wine with seafood and pasta')">
+                <div class="sommelier-icon" style="background:rgba(139,105,20,0.2);">
+                    <span style="font-size:20px;">🦞</span>
+                </div>
+                <div class="sommelier-text">
+                    <strong>Seafood &amp; Pasta</strong>
+                    <span>Sommelier recommends</span>
+                </div>
+                <span class="sommelier-badge">White Wine</span>
+            </div>
+            <div class="sommelier-card" onclick="sommelierAsk('cocktails for lounge and nightlife')">
+                <div class="sommelier-icon" style="background:rgba(30,64,175,0.2);">
+                    <span style="font-size:20px;">🍸</span>
+                </div>
+                <div class="sommelier-text">
+                    <strong>Lounge &amp; Nightlife</strong>
+                    <span>Sommelier recommends</span>
+                </div>
+                <span class="sommelier-badge">Vodka</span>
+            </div>
+            <div class="sommelier-card" onclick="sommelierAsk('best indian wine')">
+                <div class="sommelier-icon" style="background:rgba(255,153,51,0.2);">
+                    <span style="font-size:20px;">🇮🇳</span>
+                </div>
+                <div class="sommelier-text">
+                    <strong>Indian Selections</strong>
+                    <span>Sommelier recommends</span>
+                </div>
+                <span class="sommelier-badge">Local Picks</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== CONTROLS ===================== -->
+<div class="controls-bar" id="wineControls">
+    <div class="container controls-inner">
+        <div class="search-wrap">
+            <i data-lucide="search"></i>
+            <input type="text" id="wineSearch" placeholder="Search by name, brand, pairing...">
+        </div>
+        <div class="filter-tabs" id="filterTabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="red">🍷 Red Wine</button>
+            <button class="filter-tab" data-filter="white">🥂 White Wine</button>
+            <button class="filter-tab" data-filter="vodka">🍸 Vodka Collection</button>
+            <button class="filter-tab" data-filter="premium">⭐ Premium</button>
+        </div>
+        <select class="sort-select" id="wineSort">
+            <option value="default">Sort: Default</option>
+            <option value="price-low">Price: Low → High</option>
+            <option value="price-high">Price: High → Low</option>
+            <option value="rating">Top Rated</option>
+            <option value="name">Name A–Z</option>
+        </select>
+        <span id="wineCount">23 bottles</span>
+    </div>
+</div>
+
+<!-- ===================== MAIN ===================== -->
+<main class="wine-section">
+    <div class="container">
+
+        <!-- AI Sommelier Chat -->
+        <div class="sommelier-chat-wrap" id="sommelierChat">
+            <div class="sommelier-chat-header">
+                <div class="sommelier-avatar">
+                    <i data-lucide="bot" style="width:20px;height:20px;color:#000;"></i>
+                </div>
+                <div>
+                    <h3>AI Sommelier</h3>
+                    <p>Ask me anything — pairings, recommendations, or tonight's best pick.</p>
+                </div>
+                <span class="live-pill">● LIVE</span>
+            </div>
+            <div class="chat-messages" id="sommelierMessages">
+                <div class="chat-msg-bot">
+                    <div class="som-mini-avatar">
+                        <i data-lucide="bot" style="width:14px;height:14px;color:#000;"></i>
+                    </div>
+                    <div class="bot-bubble">
+                        🍷 Welcome to the Flex-Stays cellar! I'm your personal AI Sommelier. Tell me what you're dining on tonight or what mood you're in — I'll find your perfect bottle.
+                    </div>
+                </div>
+            </div>
+            <div class="chat-chips">
+                <button class="chat-chip" onclick="sommelierAsk('best wine with steak')">🥩 With Steak</button>
+                <button class="chat-chip" onclick="sommelierAsk('seafood wine pairing')">🦞 With Seafood</button>
+                <button class="chat-chip" onclick="sommelierAsk('romantic dinner wine')">🕯️ Romantic Evening</button>
+                <button class="chat-chip" onclick="sommelierAsk('cocktail spirits for party')">🎉 Party Night</button>
+                <button class="chat-chip" onclick="sommelierAsk('best indian wine')">🇮🇳 Indian Wines</button>
+                <button class="chat-chip" onclick="sommelierAsk('dessert wine pairing')">🍫 With Dessert</button>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="sommelierInput" placeholder="e.g. I'm having truffle risotto tonight..."
+                    onkeydown="if(event.key==='Enter') sommelierAsk(this.value)">
+                <button class="chat-send-btn" onclick="sommelierAsk(document.getElementById('sommelierInput').value)">
+                    <i data-lucide="send"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Red Wines -->
+        <div class="section-group" id="group-red">
+            <div class="section-label">
+                <div class="label-icon" style="background:rgba(123,26,46,0.1);">
+                    <span style="font-size:18px;">🍷</span>
+                </div>
+                <h2>Red Wines <span id="count-red"></span></h2>
+            </div>
+            <div class="wine-grid" id="grid-red"></div>
+        </div>
+
+        <!-- White Wines -->
+        <div class="section-group" id="group-white" style="margin-top:56px;">
+            <div class="section-label">
+                <div class="label-icon" style="background:rgba(139,105,20,0.1);">
+                    <span style="font-size:18px;">🥂</span>
+                </div>
+                <h2>White Wines <span id="count-white"></span></h2>
+            </div>
+            <div class="wine-grid" id="grid-white"></div>
+        </div>
+
+        <!-- Vodka / Spirits -->
+        <div class="section-group" id="group-vodka" style="margin-top:56px;">
+            <div class="section-label">
+                <div class="label-icon" style="background:rgba(30,64,175,0.1);">
+                    <span style="font-size:18px;">🍸</span>
+                </div>
+                <h2>Premium Spirits &amp; Vodka <span id="count-vodka"></span></h2>
+            </div>
+            <div class="wine-grid" id="grid-vodka"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <i data-lucide="wine-off"></i>
+            <h3>No bottles found</h3>
+            <p>Try a different search term or filter</p>
+        </div>
+
+    </div>
+</main>
+
+<!-- ===================== WINE DETAIL MODAL ===================== -->
+<div class="wine-modal-overlay" id="wineModal" onclick="closeModal(event)">
+    <div class="wine-modal" id="wineModalInner">
+        <button class="wine-modal-close" onclick="document.getElementById('wineModal').classList.remove('open')">
+            <i data-lucide="x" style="width:16px;height:16px;"></i>
+        </button>
+        <img id="modalImg" src="" alt="" class="wine-modal-img">
+        <div class="wine-modal-body">
+            <div class="modal-brand" id="modalBrand"></div>
+            <div class="modal-name" id="modalName"></div>
+            <div class="modal-specs" id="modalSpecs"></div>
+            <p class="modal-desc" id="modalDesc"></p>
+            <div class="modal-pairings">
+                <h4>Perfect Pairings</h4>
+                <div class="modal-pairings-list" id="modalPairings"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn-primary" id="modalReserveBtn">
+                    <i data-lucide="calendar" style="width:16px;height:16px;"></i>
+                    Reserve Bottle
+                </button>
+                <button class="modal-btn-gold" id="modalDiningBtn">
+                    <i data-lucide="utensils" style="width:16px;height:16px;"></i>
+                    Add to Dining
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== TOAST ===================== -->
+<div class="wine-toast" id="wineToast">
+    <i data-lucide="check-circle" class="wine-toast-icon" style="width:18px;height:18px;"></i>
+    <span id="wineToastMsg">Added successfully!</span>
+</div>
+
+<!-- Scripts -->
+<script src="auth.js"></script>
+<script src="wineData.js"></script>
+<script src="wine.js"></script>
+<script>
+    // Init Lucide after page load
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+</script>
+</body>
+</html>

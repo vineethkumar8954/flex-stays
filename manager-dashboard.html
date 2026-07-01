@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Workspace | Flex-Stays</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .dashboard-layout {
+            display: flex;
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
+            background: #faf9f6;
+        }
+        
+        .dashboard-sidebar {
+            width: 280px;
+            background: #0d2a2a;
+            color: #fff;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(10, 191, 172, 0.2);
+            flex-shrink: 0;
+        }
+        
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #0ABFAC;
+            color: #0d2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .user-info h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+        }
+        
+        .user-info p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .menu-link-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .menu-link i {
+            width: 18px;
+            height: 18px;
+            color: rgba(255,255,255,0.6);
+            transition: color 0.2s;
+        }
+        
+        .menu-link:hover {
+            background: rgba(10, 191, 172, 0.1);
+            color: #0ABFAC;
+        }
+        
+        .menu-link:hover i {
+            color: #0ABFAC;
+        }
+        
+        .menu-link.active {
+            background: #0ABFAC;
+            color: #0d2a2a;
+            font-weight: 600;
+        }
+        
+        .menu-link.active i {
+            color: #0d2a2a;
+        }
+        
+        .menu-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .menu-link.active .menu-badge {
+            background: #0d2a2a;
+            color: #0ABFAC;
+        }
+        
+        .dashboard-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        
+        .dashboard-panel {
+            display: none;
+            animation: fadeInPanel 0.4s ease forwards;
+        }
+        
+        .dashboard-panel.active {
+            display: block;
+        }
+        
+        @keyframes fadeInPanel {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .stat-card-left h4 {
+            margin: 0;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .stat-card-left p {
+            margin: 8px 0 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #0d2a2a;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(10, 191, 172, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #09a898;
+        }
+
+        .panel-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            margin-bottom: 30px;
+        }
+        
+        .panel-card-title {
+            font-family: 'Poppins', sans-serif;
+            color: #0d2a2a;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .custom-table th {
+            padding: 14px 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .custom-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--text-main);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-badge.approved {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        .status-badge.rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+        .btn-action-primary {
+            background: #0ABFAC;
+            color: #0d2a2a;
+        }
+        .btn-action-primary:hover {
+            background: #09a898;
+        }
+
+        .btn-action-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .btn-action-danger:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .analytics-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 14px;
+        }
+        .analytics-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid #0ABFAC;
+            color: #09a898;
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .btn-export:hover {
+            background: #0ABFAC;
+            color: #0d2a2a;
+        }
+
+        @media (max-width: 991px) {
+            .dashboard-layout { flex-direction: column; }
+            .dashboard-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(10, 191, 172, 0.2); }
+            .dashboard-content { padding: 24px; }
+            .analytics-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Print Override */
+        @media print {
+            body { background: #fff; color: #000; }
+            .dashboard-sidebar, .navbar, .btn-export, .btn-action { display: none !important; }
+            .dashboard-layout { margin-top: 0; }
+            .dashboard-content { padding: 0; }
+            .panel-card { border: none; box-shadow: none; }
+        }
+    </style>
+</head>
+<body class="bg-cream">
+
+    <!-- Header Navbar -->
+    <nav class="navbar scrolled" id="navbar" style="position: fixed; background: #0d2a2a;">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon" style="border-color:#0ABFAC; background:rgba(10,191,172,0.15);">
+                    <i data-lucide="hotel" style="color:#0ABFAC;"></i>
+                </div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <span class="nav-item" style="color:rgba(255,255,255,0.5);">Hotel Operations Console</span>
+            </div>
+            <div class="nav-actions">
+                <!-- Notifications bell injected dynamically -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Main Layout -->
+    <div class="dashboard-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-user">
+                <div class="user-avatar">M</div>
+                <div class="user-info">
+                    <h3 id="staffName">General Manager</h3>
+                    <p id="staffRole">Administration</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <div class="menu-link active" data-target="panel-overview">
+                    <div class="menu-link-left">
+                        <i data-lucide="bar-chart-2"></i>
+                        <span>Overview & KPIs</span>
+                    </div>
+                </div>
+                <div class="menu-link" data-target="panel-approvals">
+                    <div class="menu-link-left">
+                        <i data-lucide="award"></i>
+                        <span>Event Approvals</span>
+                    </div>
+                    <span class="menu-badge" id="badgeApprovals">0</span>
+                </div>
+                <div class="menu-link" data-target="panel-roster">
+                    <div class="menu-link-left">
+                        <i data-lucide="users"></i>
+                        <span>Staff Roster</span>
+                    </div>
+                </div>
+                <div class="menu-link" data-target="panel-reports">
+                    <div class="menu-link-left">
+                        <i data-lucide="file-text"></i>
+                        <span>Operations Reports</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Content Panels -->
+        <main class="dashboard-content">
+            
+            <!-- Statistics Row -->
+            <div class="cards-grid">
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Occupancy Rate</h4>
+                        <p id="statOccupancy">0%</p>
+                    </div>
+                    <div class="stat-card-icon"><i data-lucide="percent"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Avg Stay Length</h4>
+                        <p id="statStay">0 days</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#d97706; background:rgba(245,158,11,0.1);"><i data-lucide="calendar"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Revenue Today</h4>
+                        <p id="statRevenueToday">$0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#10b981; background:rgba(16,185,129,0.1);"><i data-lucide="dollar-sign"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-left">
+                        <h4>Revenue Month</h4>
+                        <p id="statRevenueMonth">$0</p>
+                    </div>
+                    <div class="stat-card-icon" style="color:#0284c7; background:rgba(2,132,199,0.1);"><i data-lucide="trending-up"></i></div>
+                </div>
+            </div>
+
+            <!-- Panel 1: Overview & KPIs -->
+            <section class="dashboard-panel active" id="panel-overview">
+                <div class="analytics-grid">
+                    <!-- Top Selling Rooms -->
+                    <div class="panel-card" style="margin:0;">
+                        <h3 class="panel-card-title">Top Selling Rooms</h3>
+                        <ul class="analytics-list" id="topRoomsList">
+                            <!-- Populated dynamically -->
+                        </ul>
+                    </div>
+                    
+                    <!-- Top Selling Packages -->
+                    <div class="panel-card" style="margin:0;">
+                        <h3 class="panel-card-title">Top Selling Add-ons / Packages</h3>
+                        <ul class="analytics-list" id="topPackagesList">
+                            <!-- Populated dynamically -->
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <!-- Dining Popularity -->
+                    <div class="panel-card" style="margin:0;">
+                        <h3 class="panel-card-title">Top Dining Item Reservations</h3>
+                        <ul class="analytics-list" id="topDiningList">
+                            <!-- Populated dynamically -->
+                        </ul>
+                    </div>
+
+                    <!-- Guest Satisfaction -->
+                    <div class="panel-card" style="margin:0; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                        <h3 class="panel-card-title" style="align-self:stretch;text-align:left;">Guest Satisfaction Index</h3>
+                        <div style="font-size: 64px; font-weight:800; color:#10b981; margin: 10px 0;">4.8<span style="font-size:24px;color:#64748b;">/5.0</span></div>
+                        <div style="display:flex; gap:4px; color:#d97706; margin-bottom:10px;">
+                            <i data-lucide="star" style="fill:#d97706;"></i>
+                            <i data-lucide="star" style="fill:#d97706;"></i>
+                            <i data-lucide="star" style="fill:#d97706;"></i>
+                            <i data-lucide="star" style="fill:#d97706;"></i>
+                            <i data-lucide="star" style="fill:#d97706;"></i>
+                        </div>
+                        <p style="font-size:13px; color:#64748b; margin:0;">Based on 145 post-checkout feedback surveys</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 2: Event Approvals -->
+            <section class="dashboard-panel" id="panel-approvals">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Pending Event proposals & Banquets</h3>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Event ID</th>
+                                    <th>Guest Email</th>
+                                    <th>Event Type</th>
+                                    <th>Date</th>
+                                    <th>Guests count</th>
+                                    <th>Theme / Notes</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="eventsTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 3: Staff Roster -->
+            <section class="dashboard-panel" id="panel-roster">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">Weekly Staff Shift Roster</h3>
+                    
+                    <form id="rosterForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:30px; align-items:flex-end;">
+                        <div class="form-group" style="margin:0;">
+                            <label>Staff User</label>
+                            <select class="form-control" id="rosterStaff" required>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>Shift Day</label>
+                            <select class="form-control" id="rosterDay">
+                                <option>Monday</option>
+                                <option>Tuesday</option>
+                                <option>Wednesday</option>
+                                <option>Thursday</option>
+                                <option>Friday</option>
+                                <option>Saturday</option>
+                                <option>Sunday</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>Hours shift</label>
+                            <select class="form-control" id="rosterHours">
+                                <option>Morning (07:00 - 15:00)</option>
+                                <option>Evening (15:00 - 23:00)</option>
+                                <option>Night (23:00 - 07:00)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-submit" style="height:42px; padding:0 20px;">Assign Shift</button>
+                    </form>
+
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Staff Name</th>
+                                    <th>Role</th>
+                                    <th>Assigned Day</th>
+                                    <th>Hours Block</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rosterTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel 4: Operations Reports -->
+            <section class="dashboard-panel" id="panel-reports">
+                <div class="panel-card">
+                    <h3 class="panel-card-title">
+                        <span>Hotel Analytics Report Engine</span>
+                        <div style="display:flex; gap:12px;">
+                            <button class="btn-export" onclick="exportCSV()"><i data-lucide="download"></i> Export as CSV</button>
+                            <button class="btn-export" onclick="window.print()" style="border-color:#0d2a2a; color:#0d2a2a;"><i data-lucide="printer"></i> Export/Print PDF</button>
+                        </div>
+                    </h3>
+
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:24px; margin-bottom:30px;">
+                        <div class="panel-card" style="margin:0; border: 1px solid rgba(0,0,0,0.08);">
+                            <h4 style="margin:0 0 16px; color:#0d2a2a;">Occupancy Report Summary</h4>
+                            <table class="custom-table" style="font-size:12px;">
+                                <tbody>
+                                    <tr><td><strong>Total Inventory</strong></td><td>40 Rooms</td></tr>
+                                    <tr><td><strong>Occupied Rooms</strong></td><td id="repOccupied">0</td></tr>
+                                    <tr><td><strong>Dirty / Servicing</strong></td><td id="repDirty">0</td></tr>
+                                    <tr><td><strong>Maintenance Lockout</strong></td><td id="repMaint">0</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="panel-card" style="margin:0; border: 1px solid rgba(0,0,0,0.08);">
+                            <h4 style="margin:0 0 16px; color:#0d2a2a;">Financial Auditing Metrics</h4>
+                            <table class="custom-table" style="font-size:12px;">
+                                <tbody>
+                                    <tr><td><strong>Room Charges Paid</strong></td><td id="repRoomRevenue">$0</td></tr>
+                                    <tr><td><strong>Dining Charges Collected</strong></td><td id="repDiningRevenue">$0</td></tr>
+                                    <tr><td><strong>Add-ons & Service Revenue</strong></td><td id="repAddonRevenue">$0</td></tr>
+                                    <tr><td><strong>Total Net Revenue</strong></td><td id="repTotalRevenue">$0</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-bottom:12px; color:#0d2a2a;">Recent Bookings History</h4>
+                    <div style="overflow-x:auto;">
+                        <table class="custom-table" id="bookingsReportTable" style="font-size:13px;">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Guest</th>
+                                    <th>Room Booked</th>
+                                    <th>Add-ons</th>
+                                    <th>Total Paid</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Shared Session scripts -->
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = window.getCurrentUser();
+            if (user) {
+                document.getElementById('staffName').textContent = user.firstName + ' ' + (user.lastName || '');
+            }
+
+            // Tab Panels Toggle
+            const menuLinks = document.querySelectorAll('.menu-link');
+            const panels = document.querySelectorAll('.dashboard-panel');
+            
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    panels.forEach(p => p.classList.remove('active'));
+                    
+                    link.classList.add('active');
+                    const target = link.getAttribute('data-target');
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+
+            // Handle Shift Roster Submit
+            const rosterForm = document.getElementById('rosterForm');
+            rosterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const staffEmail = document.getElementById('rosterStaff').value;
+                const day = document.getElementById('rosterDay').value;
+                const hours = document.getElementById('rosterHours').value;
+
+                let staffUsers = JSON.parse(localStorage.getItem('staffUsers') || '[]');
+                const staffObj = staffUsers.find(s => s.email === staffEmail);
+                if (staffObj) {
+                    let roster = JSON.parse(localStorage.getItem('staffRoster') || '[]');
+                    roster.push({
+                        name: staffObj.firstName + ' ' + (staffObj.lastName || ''),
+                        role: staffObj.role,
+                        day: day,
+                        hours: hours
+                    });
+                    localStorage.setItem('staffRoster', JSON.stringify(roster));
+                    rosterForm.reset();
+                    loadData();
+                }
+            });
+
+            // LocalStorage sync handler
+            window.addEventListener('storage', (e) => {
+                if (['bookings', 'roomRegistry', 'eventRequests', 'staffRoster', 'diningReservations'].includes(e.key)) {
+                    loadData();
+                }
+            });
+
+            // Load registry
+            loadData();
+        });
+
+        function loadData() {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            const registry = JSON.parse(localStorage.getItem('roomRegistry') || '{}');
+            const events = JSON.parse(localStorage.getItem('eventRequests') || '[]');
+            const roster = JSON.parse(localStorage.getItem('staffRoster') || '[]');
+            const staffUsers = JSON.parse(localStorage.getItem('staffUsers') || '[]');
+            const dining = JSON.parse(localStorage.getItem('diningReservations') || '[]');
+
+            // 1. Calculate Occupancy Rate
+            const roomsList = Object.keys(registry);
+            const totalRooms = roomsList.length || 40;
+            const occupiedRooms = roomsList.filter(r => registry[r].status === 'Occupied').length;
+            const dirtyRooms = roomsList.filter(r => registry[r].housekeeping === 'Dirty').length;
+            const maintRooms = roomsList.filter(r => registry[r].status === 'Maintenance').length;
+            
+            const occupancyRate = totalRooms > 0 ? Math.round((occupiedRooms / totalRooms) * 100) : 0;
+            document.getElementById('statOccupancy').textContent = occupancyRate + '%';
+            document.getElementById('repOccupied').textContent = occupiedRooms;
+            document.getElementById('repDirty').textContent = dirtyRooms;
+            document.getElementById('repMaint').textContent = maintRooms;
+
+            // 2. Average Stay Length & Revenue Calculations
+            let staySum = 0;
+            let roomRevSum = 0;
+            let addonRevSum = 0;
+            let revenueToday = 0;
+            let revenueMonth = 0;
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            const thisMonth = new Date().getMonth();
+
+            bookings.forEach(b => {
+                // Stay length
+                const checkin = new Date(b.checkinDate);
+                const checkout = new Date(b.checkoutDate);
+                const days = Math.round((checkout - checkin) / (1000 * 60 * 60 * 24)) || 1;
+                staySum += days;
+
+                // Revenue splits
+                const roomCost = parseFloat(b.roomCost || b.totalCost || 0);
+                roomRevSum += roomCost;
+                
+                // Addons cost
+                let addonsCost = 0;
+                if (b.selectedAddons && Array.isArray(b.selectedAddons)) {
+                    b.selectedAddons.forEach(a => {
+                        addonsCost += parseFloat(a.price || 0);
+                    });
+                }
+                addonRevSum += addonsCost;
+
+                // Today and Monthly totals
+                const totalPaid = parseFloat(b.totalCost || 0);
+                // Assume bookings booked today or checked in today have paid
+                if (b.checkinDate === todayStr) {
+                    revenueToday += totalPaid;
+                }
+                if (checkin.getMonth() === thisMonth) {
+                    revenueMonth += totalPaid;
+                }
+            });
+
+            const avgStay = bookings.length > 0 ? Math.round((staySum / bookings.length) * 10) / 10 : 0;
+            document.getElementById('statStay').textContent = avgStay + ' days';
+            document.getElementById('statRevenueToday').textContent = '$' + revenueToday.toLocaleString();
+            document.getElementById('statRevenueMonth').textContent = '$' + revenueMonth.toLocaleString();
+
+            // Reports module financial stats
+            document.getElementById('repRoomRevenue').textContent = '$' + roomRevSum.toLocaleString();
+            document.getElementById('repAddonRevenue').textContent = '$' + addonRevSum.toLocaleString();
+
+            // Dining revenue
+            let diningRev = 0;
+            dining.forEach(d => {
+                // assume flat rate average check of $75 per dining reservation
+                diningRev += 75;
+            });
+            document.getElementById('repDiningRevenue').textContent = '$' + diningRev.toLocaleString();
+            document.getElementById('repTotalRevenue').textContent = '$' + (roomRevSum + addonRevSum + diningRev).toLocaleString();
+
+            // 3. Analytics: Top Rooms
+            const roomSales = {};
+            bookings.forEach(b => {
+                const name = b.roomName || 'Luxury Room';
+                roomSales[name] = (roomSales[name] || 0) + 1;
+            });
+            const topRoomsList = document.getElementById('topRoomsList');
+            topRoomsList.innerHTML = '';
+            Object.entries(roomSales).sort((a,b) => b[1] - a[1]).slice(0, 5).forEach(([name, count]) => {
+                topRoomsList.innerHTML += `<li class="analytics-item"><span>${name}</span><strong>${count} Sales</strong></li>`;
+            });
+            if (topRoomsList.innerHTML === '') {
+                topRoomsList.innerHTML = `<li style="padding:10px 0;text-align:center;color:rgba(0,0,0,0.4);">No sales bookings recorded</li>`;
+            }
+
+            // 4. Analytics: Top Packages / Addons
+            const packageSales = {};
+            bookings.forEach(b => {
+                if (b.selectedAddons && Array.isArray(b.selectedAddons)) {
+                    b.selectedAddons.forEach(a => {
+                        const name = a.name;
+                        packageSales[name] = (packageSales[name] || 0) + 1;
+                    });
+                }
+            });
+            const topPackagesList = document.getElementById('topPackagesList');
+            topPackagesList.innerHTML = '';
+            Object.entries(packageSales).sort((a,b) => b[1] - a[1]).slice(0, 5).forEach(([name, count]) => {
+                topPackagesList.innerHTML += `<li class="analytics-item"><span>${name}</span><strong>${count} bookings</strong></li>`;
+            });
+            if (topPackagesList.innerHTML === '') {
+                topPackagesList.innerHTML = `<li style="padding:10px 0;text-align:center;color:rgba(0,0,0,0.4);">No packages/add-ons booked yet</li>`;
+            }
+
+            // 5. Analytics: Dining Items
+            const diningSales = {};
+            dining.forEach(d => {
+                const name = d.time || 'Dinner reservation';
+                diningSales[name] = (diningSales[name] || 0) + 1;
+            });
+            const topDiningList = document.getElementById('topDiningList');
+            topDiningList.innerHTML = '';
+            Object.entries(diningSales).sort((a,b) => b[1] - a[1]).slice(0, 5).forEach(([time, count]) => {
+                topDiningList.innerHTML += `<li class="analytics-item"><span>Reservations for ${time}</span><strong>${count} tables</strong></li>`;
+            });
+            if (topDiningList.innerHTML === '') {
+                topDiningList.innerHTML = `<li style="padding:10px 0;text-align:center;color:rgba(0,0,0,0.4);">No dining reservations logged</li>`;
+            }
+
+            // 6. Event Approvals Queue
+            const approvalsBody = document.getElementById('eventsTableBody');
+            approvalsBody.innerHTML = '';
+            let pendingCount = 0;
+            
+            events.forEach(evt => {
+                const isPending = !evt.status || evt.status === 'Pending' || evt.status === 'Requested';
+                if (isPending) pendingCount++;
+
+                const actionCell = isPending ? `
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-action btn-action-primary" onclick="resolveEventProposal('${evt.id || evt.requestedAt}', 'Approved')">Approve</button>
+                        <button class="btn-action btn-action-danger" onclick="resolveEventProposal('${evt.id || evt.requestedAt}', 'Rejected')">Deny</button>
+                    </div>
+                ` : '<span style="color:#64748b;">Processed</span>';
+
+                approvalsBody.innerHTML += `
+                    <tr>
+                        <td><strong>${evt.id || 'EVT001'}</strong></td>
+                        <td>${evt.guestEmail || 'alex@vanderbilt.com'}</td>
+                        <td>${evt.eventType}</td>
+                        <td>${evt.eventDate}</td>
+                        <td>${evt.guests} guests</td>
+                        <td>${evt.notes || 'None'}</td>
+                        <td><span class="status-badge ${isPending ? 'pending' : evt.status.toLowerCase()}">${evt.status || 'Pending'}</span></td>
+                        <td>${actionCell}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('badgeApprovals').textContent = pendingCount;
+            if (events.length === 0) {
+                approvalsBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:rgba(0,0,0,0.4);">No event proposals submitted yet.</td></tr>`;
+            }
+
+            // 7. Roster staff dropdown & Roster list
+            const rosterStaffSelect = document.getElementById('rosterStaff');
+            rosterStaffSelect.innerHTML = '<option value="">-- Choose Staff User --</option>';
+            staffUsers.forEach(s => {
+                rosterStaffSelect.innerHTML += `<option value="${s.email}">${s.firstName} ${s.lastName || ''} (${s.role})</option>`;
+            });
+
+            const rosterBody = document.getElementById('rosterTableBody');
+            rosterBody.innerHTML = '';
+            roster.forEach((item, index) => {
+                rosterBody.innerHTML += `
+                    <tr>
+                        <td><strong>${item.name}</strong></td>
+                        <td><span class="status-badge pending" style="text-transform:capitalize;">${item.role}</span></td>
+                        <td>${item.day}</td>
+                        <td>${item.hours}</td>
+                        <td><button class="btn-action btn-action-danger" onclick="removeRosterItem(${index})">Remove</button></td>
+                    </tr>
+                `;
+            });
+            if (roster.length === 0) {
+                rosterBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:rgba(0,0,0,0.4);">No staff shift assignments configured.</td></tr>`;
+            }
+
+            // 8. Financial Report list
+            const reportBookingsBody = document.querySelector('#bookingsReportTable tbody');
+            reportBookingsBody.innerHTML = '';
+            bookings.forEach(b => {
+                const totalPaid = parseFloat(b.totalCost || 0);
+                const addList = b.selectedAddons ? b.selectedAddons.map(a => a.name).join(', ') : 'None';
+                reportBookingsBody.innerHTML += `
+                    <tr>
+                        <td><strong>${b.id}</strong></td>
+                        <td>${b.guestInfo ? b.guestInfo.email : 'guest@domain.com'}</td>
+                        <td>${b.roomName}</td>
+                        <td>${addList}</td>
+                        <td><strong>$${totalPaid.toLocaleString()}</strong></td>
+                        <td><span class="status-badge approved">Paid</span></td>
+                    </tr>
+                `;
+            });
+            if (bookings.length === 0) {
+                reportBookingsBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:rgba(0,0,0,0.4);">No bookings processed.</td></tr>`;
+            }
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        function resolveEventProposal(evtId, newStatus) {
+            let events = JSON.parse(localStorage.getItem('eventRequests') || '[]');
+            const idx = events.findIndex(e => (e.id === evtId || e.requestedAt === evtId));
+            
+            if (idx > -1) {
+                const evt = events[idx];
+                evt.status = newStatus;
+                localStorage.setItem('eventRequests', JSON.stringify(events));
+
+                // Sync back to user specific events list in localStorage!
+                const userEmail = evt.guestEmail.toLowerCase();
+                const key = `events_${userEmail}`;
+                let userEvts = JSON.parse(localStorage.getItem(key) || '[]');
+                const uIdx = userEvts.findIndex(e => e.requestedAt === evt.requestedAt);
+                if (uIdx > -1) {
+                    userEvts[uIdx].status = newStatus;
+                    localStorage.setItem(key, JSON.stringify(userEvts));
+                }
+
+                // Log audit & notify guest
+                const user = window.getCurrentUser();
+                const operator = user ? user.email : 'manager@flexstays.com';
+
+                if (window.addNotification) {
+                    window.addNotification(`Your Event Proposal for ${evt.eventDate} has been ${newStatus}.`, [userEmail, 'admin']);
+                    window.addNotification(`Manager ${newStatus} event request ${evtId} submitted by ${userEmail}`, ['admin', 'reception']);
+                }
+                if (window.addAuditLog) {
+                    window.addAuditLog(operator, `Manager ${newStatus} event proposal ${evtId} (Guest: ${userEmail})`);
+                }
+
+                loadData();
+                window.dispatchEvent(new Event('storage'));
+            }
+        }
+
+        function removeRosterItem(index) {
+            let roster = JSON.parse(localStorage.getItem('staffRoster') || '[]');
+            roster.splice(index, 1);
+            localStorage.setItem('staffRoster', JSON.stringify(roster));
+            loadData();
+        }
+
+        function exportCSV() {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Booking ID,Guest Email,Room Name,Check-In,Check-Out,Total Cost,Status\r\n";
+            
+            bookings.forEach(b => {
+                const guest = b.guestInfo ? b.guestInfo.email : 'guest@domain.com';
+                const row = `"${b.id}","${guest}","${b.roomName}","${b.checkinDate}","${b.checkoutDate}",$${b.totalCost || 0},"Paid"`;
+                csvContent += row + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `hms_operations_report_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>

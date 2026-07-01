@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flex-Stays | Find the Right Hotel</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Flatpickr Datepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* Dining Gallery Hover Styles */
+        .dining-gallery-card {
+            box-shadow: var(--shadow-sm);
+        }
+        .dining-gallery-card img {
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .dining-gallery-card:hover img {
+            transform: scale(1.06);
+        }
+        .dining-gallery-card:hover {
+            box-shadow: 0 12px 28px rgba(10, 191, 172, 0.18);
+        }
+        .exp-card {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="hotel"></i>
+                </div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <a href="#home" class="nav-item active">Home</a>
+                <a href="#about" class="nav-item">About Us</a>
+                <a href="#rooms" class="nav-item">Rooms</a>
+                <a href="#dining" class="nav-item">Dining</a>
+                <a href="#experiences" class="nav-item">Experiences</a>
+                <a href="#events" class="nav-item">Events</a>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-text">Sign In</a>
+                <button class="btn btn-primary btn-icon">
+                    Contact Us <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+            <button class="mobile-menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <img src="sunset.jpg" alt="Luxury Pool">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container hero-content animate-on-scroll">
+            <div class="hero-text-wrapper">
+                <div class="hero-badge">
+                    <div class="badge-dot"></div>
+                    60M Happy Bookings last 24 Hours
+                </div>
+                <h1 class="hero-title">Find the Right Hotel,<br><span>Every Time</span></h1>
+                <p class="hero-subtitle">Explore Trusted Accommodations Worldwide And Book Easily With Transparent Pricing And Secure Payments.</p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary btn-large btn-icon">
+                        Book a Room Now <i data-lucide="arrow-right"></i>
+                    </button>
+                    <button class="btn btn-underline">Explore Rooms</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Booking Bar -->
+        <div class="booking-bar-wrapper animate-on-scroll delay-1">
+            <div class="container">
+                <div class="booking-bar">
+                    <div class="booking-field">
+                        <label>Check-In</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="calendar"></i>
+                            <input type="date" id="homeCheckin" placeholder="dd-mm-yyyy">
+                            <i data-lucide="calendar" class="right-icon"></i>
+                        </div>
+                    </div>
+                    <div class="booking-field">
+                        <label>Check-Out</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="calendar"></i>
+                            <input type="date" id="homeCheckout" placeholder="dd-mm-yyyy">
+                            <i data-lucide="calendar" class="right-icon"></i>
+                        </div>
+                    </div>
+                    <div class="booking-field">
+                        <label>Guests</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="users"></i>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select" id="homeGuestsSelect">
+                                    <span class="custom-select-trigger">2 Guests</span>
+                                    <div class="custom-options">
+                                        <span class="custom-option" data-value="1 Guest">1 Guest</span>
+                                        <span class="custom-option selected" data-value="2 Guests">2 Guests</span>
+                                        <span class="custom-option" data-value="3 Guests">3 Guests</span>
+                                        <span class="custom-option" data-value="4 Guests">4 Guests</span>
+                                        <span class="custom-option" data-value="5+ Guests">5+ Guests</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="booking-field">
+                        <label>Room Type</label>
+                        <div class="input-with-icon">
+                            <i data-lucide="bed-double"></i>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select" id="homeRoomTypeSelect">
+                                    <span class="custom-select-trigger">Any Room</span>
+                                    <div class="custom-options">
+                                        <span class="custom-option selected" data-value="Any Room">Any Room</span>
+                                        <span class="custom-option" data-value="Standard">Standard</span>
+                                        <span class="custom-option" data-value="Deluxe">Deluxe</span>
+                                        <span class="custom-option" data-value="Executive Suite">Executive Suite</span>
+                                        <span class="custom-option" data-value="Presidential Suite">Presidential Suite</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="booking-btn-wrapper">
+                        <button class="btn btn-primary btn-full btn-search" id="homeSearchBtn">
+                            <i data-lucide="search"></i> Search Availability
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container stats-container">
+            <div class="stat-item animate-on-scroll">
+                <p class="stat-label">Hotels</p>
+                <p class="stat-value">60K+</p>
+            </div>
+            <div class="stat-item animate-on-scroll delay-1">
+                <p class="stat-label">Rooms Booked</p>
+                <p class="stat-value">150M</p>
+            </div>
+            <div class="stat-item animate-on-scroll delay-2">
+                <p class="stat-label">Destinations</p>
+                <p class="stat-value">6K+</p>
+            </div>
+            <div class="stat-item animate-on-scroll delay-3">
+                <p class="stat-label">Countries</p>
+                <p class="stat-value">80+</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rooms Section -->
+    <section class="rooms" id="rooms">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-subtitle">The Residence</p>
+                <h2 class="section-title">Featured Stays</h2>
+                <p class="section-desc">Each room is a sanctuary designed for quiet indulgence and effortless comfort.</p>
+            </div>
+            
+            <div class="rooms-grid">
+                <!-- Room 1 -->
+                <div class="room-card group animate-on-scroll">
+                    <div class="room-img-wrapper">
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/4d2a31f08_generated_8f709187.png" alt="Standard Room">
+                        <div class="room-overlay"></div>
+                        <div class="room-book-btn">
+                            <a href="room-details?id=STD-001" class="btn btn-gold btn-full">Book Now</a>
+                        </div>
+                    </div>
+                    <div class="room-info">
+                        <div class="room-header">
+                            <h3>Standard Room</h3>
+                            <div class="room-price">
+                                <span class="price">$290</span>
+                                <span class="period">/night</span>
+                            </div>
+                        </div>
+                        <div class="room-meta">
+                            <span><i data-lucide="users"></i> 2 Guests</span>
+                            <span><i data-lucide="maximize-2"></i> 35 m²</span>
+                        </div>
+                        <div class="room-tags">
+                            <span class="tag">King Bed</span>
+                            <span class="tag">Wi-Fi</span>
+                            <span class="tag">Room Service</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room 2 -->
+                <div class="room-card group animate-on-scroll delay-1">
+                    <div class="room-img-wrapper">
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/a151e3668_generated_b934b4f1.png" alt="Deluxe Room">
+                        <div class="room-overlay"></div>
+                        <span class="room-badge badge-popular">Popular</span>
+                        <div class="room-book-btn">
+                            <a href="room-details?id=DLX-001" class="btn btn-gold btn-full">Book Now</a>
+                        </div>
+                    </div>
+                    <div class="room-info">
+                        <div class="room-header">
+                            <h3>Deluxe Room</h3>
+                            <div class="room-price">
+                                <span class="price">$450</span>
+                                <span class="period">/night</span>
+                            </div>
+                        </div>
+                        <div class="room-meta">
+                            <span><i data-lucide="users"></i> 2 Guests</span>
+                            <span><i data-lucide="maximize-2"></i> 50 m²</span>
+                        </div>
+                        <div class="room-tags">
+                            <span class="tag">Ocean View</span>
+                            <span class="tag">King Bed</span>
+                            <span class="tag">Minibar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room 3 -->
+                <div class="room-card group animate-on-scroll delay-2">
+                    <div class="room-img-wrapper">
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/dd984c790_generated_4485225f.png" alt="Executive Suite">
+                        <div class="room-overlay"></div>
+                        <div class="room-book-btn">
+                            <a href="room-details?id=EXEC-001" class="btn btn-gold btn-full">Book Now</a>
+                        </div>
+                    </div>
+                    <div class="room-info">
+                        <div class="room-header">
+                            <h3>Executive Suite</h3>
+                            <div class="room-price">
+                                <span class="price">$720</span>
+                                <span class="period">/night</span>
+                            </div>
+                        </div>
+                        <div class="room-meta">
+                            <span><i data-lucide="users"></i> 4 Guests</span>
+                            <span><i data-lucide="maximize-2"></i> 85 m²</span>
+                        </div>
+                        <div class="room-tags">
+                            <span class="tag">Living Area</span>
+                            <span class="tag">Balcony</span>
+                            <span class="tag">Butler Service</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room 4 -->
+                <div class="room-card group animate-on-scroll delay-3">
+                    <div class="room-img-wrapper">
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/5652f2763_generated_68e877e7.png" alt="Presidential Suite">
+                        <div class="room-overlay"></div>
+                        <span class="room-badge badge-exclusive">Exclusive</span>
+                        <div class="room-book-btn">
+                            <a href="room-details?id=PRES-001" class="btn btn-gold btn-full">Book Now</a>
+                        </div>
+                    </div>
+                    <div class="room-info">
+                        <div class="room-header">
+                            <h3>Presidential Suite</h3>
+                            <div class="room-price">
+                                <span class="price">$1450</span>
+                                <span class="period">/night</span>
+                            </div>
+                        </div>
+                        <div class="room-meta">
+                            <span><i data-lucide="users"></i> 6 Guests</span>
+                            <span><i data-lucide="maximize-2"></i> 150 m²</span>
+                        </div>
+                        <div class="room-tags">
+                            <span class="tag">Private Pool</span>
+                            <span class="tag">Piano</span>
+                            <span class="tag">Personal Chef</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dining Section -->
+    <section class="dining" id="dining">
+        <div class="container dining-grid">
+            <div class="dining-img animate-on-scroll slide-right">
+                <div class="dining-img-wrapper">
+                    <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/4575811a7_generated_036332e5.png" alt="Fine Dining">
+                    <div class="dining-overlay"></div>
+                </div>
+                <div class="dining-decor"></div>
+            </div>
+            <div class="dining-content animate-on-scroll slide-left">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; color:var(--text-main); font-weight:600; font-size:14px;">
+                    <i data-lucide="star" class="star-fill text-gold" style="width:16px; height:16px;"></i>
+                    <i data-lucide="star" class="star-fill text-gold" style="width:16px; height:16px;"></i>
+                    <i data-lucide="star" class="star-fill text-gold" style="width:16px; height:16px;"></i>
+                    <i data-lucide="star" class="star-fill text-gold" style="width:16px; height:16px;"></i>
+                    <i data-lucide="star" class="star-fill text-gold" style="width:16px; height:16px;"></i>
+                    <span>4.8 Dining Experience</span>
+                    <span style="color:var(--text-muted); font-weight:400;">(2,400+ Guest Reviews)</span>
+                </div>
+                <p class="section-subtitle">The Culinary Atelier</p>
+                <h2 class="section-title">A Feast For<br><span class="italic">Every Sense</span></h2>
+                <p class="section-desc text-left" style="margin-bottom: 24px;">Experience award-winning dining curated by our executive chefs. From gourmet breakfasts to candlelight dinners, every meal is crafted to create unforgettable memories.</p>
+                
+                <h4 style="color: var(--forest); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Restaurant Timings</h4>
+                <div class="dining-times" style="margin-bottom: 32px;">
+                    <div class="time-item"><div class="dot"></div>Breakfast <span style="margin-left:auto; color:var(--text-main);">7:00 AM – 10:30 AM</span></div>
+                    <div class="time-item"><div class="dot"></div>Lunch <span style="margin-left:auto; color:var(--text-main);">12:00 PM – 3:00 PM</span></div>
+                    <div class="time-item"><div class="dot"></div>Dinner <span style="margin-left:auto; color:var(--text-main);">6:30 PM – 11:00 PM</span></div>
+                    <div class="time-item"><div class="dot"></div>Lounge Bar <span style="margin-left:auto; color:var(--text-main);">Open 24 Hours</span></div>
+                </div>
+
+                <h4 style="color: var(--forest); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Food Categories</h4>
+                <div class="food-category-chips" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 32px;">
+                    <a href="menu.html?category=starters" class="chip" style="text-decoration:none;">🥗 Starters</a>
+                    <a href="menu.html?category=main" class="chip" style="text-decoration:none;">🍝 Main Course</a>
+                    <a href="menu.html?category=italian" class="chip" style="text-decoration:none;">🍕 Italian</a>
+                    <a href="menu.html?category=asian" class="chip" style="text-decoration:none;">🍜 Asian</a>
+                    <a href="menu.html?category=grills" class="chip" style="text-decoration:none;">🥩 Grills</a>
+                    <a href="menu.html?category=desserts" class="chip" style="text-decoration:none;">🍰 Desserts</a>
+                    <a href="menu.html?category=beverages" class="chip" style="text-decoration:none;">🍹 Beverages</a>
+                    <a href="menu.html?category=wine" class="chip" style="text-decoration:none;">🍷 Wine Collection</a>
+                </div>
+
+                <div class="ai-dining-concierge" id="aiDiningConcierge">
+                    <!-- Header -->
+                    <div class="ai-header" style="display:flex; gap:10px; align-items:center; background: linear-gradient(135deg, var(--forest) 0%, #0d4a3a 100%); color:#ffffff; font-weight:700; font-size:15px; margin-bottom:0; padding:12px 16px; border-radius:10px 10px 0 0; letter-spacing:0.3px; box-shadow:0 2px 8px rgba(13,42,42,0.15);">
+                        <i data-lucide="bot" style="color:var(--gold); width:18px; height:18px; flex-shrink:0;"></i>
+                        <span style="color:#ffffff; flex:1;">AI Dining Concierge</span>
+                        <span style="font-size:10px; background:rgba(10,191,172,0.3); color:#0ABFAC; padding:2px 8px; border-radius:20px; font-weight:600; letter-spacing:0.5px;">LIVE</span>
+                    </div>
+
+                    <!-- Chat Window -->
+                    <div id="diningChatWindow" style="background:#f9f8f5; border:1px solid rgba(13,42,42,0.1); border-top:none; border-radius:0 0 10px 10px; padding:14px; min-height:120px; max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+                        <!-- Welcome message -->
+                        <div class="dc-msg dc-bot" style="display:flex; gap:8px; align-items:flex-start;">
+                            <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--forest),#0d4a3a); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <i data-lucide="bot" style="width:14px; height:14px; color:var(--gold);"></i>
+                            </div>
+                            <div style="background:#fff; border:1px solid rgba(212,175,55,0.2); border-radius:0 10px 10px 10px; padding:10px 14px; font-size:13px; color:var(--text-main); line-height:1.5; max-width:90%; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+                                👋 Hello! I'm your personal dining concierge. Tell me what you're craving and I'll find the perfect dish for you!
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Suggestion Chips -->
+                    <div id="diningChips" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; margin-bottom:10px;">
+                        <button class="dc-chip" onclick="diningConciergeAsk('vegetarian dishes')" style="background:#fff; border:1px solid rgba(46,125,50,0.3); color:#2e7d32; font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; cursor:pointer; transition:all 0.2s;">🥗 Vegetarian</button>
+                        <button class="dc-chip" onclick="diningConciergeAsk('spicy food')" style="background:#fff; border:1px solid rgba(198,40,40,0.3); color:#c62828; font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; cursor:pointer; transition:all 0.2s;">🌶️ Spicy</button>
+                        <button class="dc-chip" onclick="diningConciergeAsk('romantic dinner for two')" style="background:#fff; border:1px solid rgba(212,175,55,0.4); color:#b8860b; font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; cursor:pointer; transition:all 0.2s;">🕯️ Romantic</button>
+                        <button class="dc-chip" onclick="diningConciergeAsk('best desserts')" style="background:#fff; border:1px solid rgba(10,191,172,0.3); color:#0ABFAC; font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; cursor:pointer; transition:all 0.2s;">🍰 Desserts</button>
+                        <button class="dc-chip" onclick="diningConciergeAsk('chef special')" style="background:#fff; border:1px solid rgba(13,42,42,0.2); color:var(--forest); font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; cursor:pointer; transition:all 0.2s;">⭐ Chef's Special</button>
+                        <button class="dc-chip" onclick="diningConciergeAsk('seafood')" style="background:#fff; border:1px solid rgba(2,119,189,0.3); color:#0277bd; font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; cursor:pointer; transition:all 0.2s;">🦞 Seafood</button>
+                    </div>
+
+                    <!-- Input Row -->
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <input id="diningConciergeInput" type="text" placeholder="e.g. I want something light and vegetarian..." 
+                            style="flex:1; padding:11px 16px; border-radius:24px; border:1px solid rgba(13,42,42,0.15); background:#fff; font-family:var(--font-body); font-size:13px; color:var(--text-main); outline:none; transition:all 0.2s; box-shadow:0 1px 4px rgba(0,0,0,0.05);"
+                            onfocus="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 0 0 3px rgba(10,191,172,0.12)'"
+                            onblur="this.style.borderColor='rgba(13,42,42,0.15)'; this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)'"
+                            onkeydown="if(event.key==='Enter') diningConciergeAsk(this.value)">
+                        <button onclick="diningConciergeAsk(document.getElementById('diningConciergeInput').value)"
+                            style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,var(--primary),#09a695); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(10,191,172,0.35); transition:all 0.2s; flex-shrink:0;"
+                            onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                            <i data-lucide="send" style="width:16px; height:16px; color:#fff;"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chefs-favorites" style="margin-bottom:32px;">
+                    <h4 style="color: var(--forest); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Chef's Favorites</h4>
+                    <ul style="list-style:none; padding:0; margin:0; display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:14px; color:var(--text-main);">
+                        <li><a href="menu.html?search=Truffle#menuControls" style="color:inherit; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='inherit'"><i data-lucide="star" style="width:12px; height:12px; color:var(--gold); margin-right:4px;"></i> Truffle Risotto</a></li>
+                        <li><a href="menu.html?search=Wagyu#menuControls" style="color:inherit; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='inherit'"><i data-lucide="star" style="width:12px; height:12px; color:var(--gold); margin-right:4px;"></i> Wagyu Tenderloin</a></li>
+                        <li><a href="menu.html?search=Lobster#menuControls" style="color:inherit; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='inherit'"><i data-lucide="star" style="width:12px; height:12px; color:var(--gold); margin-right:4px;"></i> Lobster Thermidor</a></li>
+                        <li><a href="menu.html?search=Chocolate#menuControls" style="color:inherit; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='inherit'"><i data-lucide="star" style="width:12px; height:12px; color:var(--gold); margin-right:4px;"></i> Signature Chocolate Soufflé</a></li>
+                    </ul>
+                </div>
+
+                <div style="display:flex; gap:16px; margin-top:32px;">
+                    <a href="menu.html" class="btn btn-outline-forest" style="text-decoration:none;">View Menu</a>
+                    <button class="btn btn-primary" id="openDiningReservationBtn">Reserve a Table</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mini Dining Gallery -->
+        <div class="dining-gallery" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; padding: 40px 5%; margin-top:40px;">
+            <div class="dining-gallery-card" data-category="interior" style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:4/3; cursor:pointer; transition:var(--transition);">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800" style="width:100%; height:100%; object-fit:cover;" alt="Restaurant Interior">
+                <div style="position:absolute; bottom:0; left:0; width:100%; padding:20px 16px 16px; background:linear-gradient(transparent, rgba(0,0,0,0.8)); color:#fff; font-weight:600; font-size:14px;">Restaurant Interior</div>
+            </div>
+            <div class="dining-gallery-card" data-category="chef" style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:4/3; cursor:pointer; transition:var(--transition);">
+                <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=800" style="width:100%; height:100%; object-fit:cover;" alt="Chef Experience">
+                <div style="position:absolute; bottom:0; left:0; width:100%; padding:20px 16px 16px; background:linear-gradient(transparent, rgba(0,0,0,0.8)); color:#fff; font-weight:600; font-size:14px;">Chef Experience</div>
+            </div>
+            <div class="dining-gallery-card" data-category="private" style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:4/3; cursor:pointer; transition:var(--transition);">
+                <img src="https://images.unsplash.com/photo-1560624052-449f5ddf0c31?auto=format&fit=crop&q=80&w=800" style="width:100%; height:100%; object-fit:cover;" alt="Private Dining">
+                <div style="position:absolute; bottom:0; left:0; width:100%; padding:20px 16px 16px; background:linear-gradient(transparent, rgba(0,0,0,0.8)); color:#fff; font-weight:600; font-size:14px;">Private Dining</div>
+            </div>
+            <div class="dining-gallery-card" data-category="terrace" style="position:relative; border-radius:12px; overflow:hidden; aspect-ratio:4/3; cursor:pointer; transition:var(--transition);">
+                <img src="https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?auto=format&fit=crop&q=80&w=800" style="width:100%; height:100%; object-fit:cover;" alt="Sunset Terrace">
+                <div style="position:absolute; bottom:0; left:0; width:100%; padding:20px 16px 16px; background:linear-gradient(transparent, rgba(0,0,0,0.8)); color:#fff; font-weight:600; font-size:14px;">Sunset Terrace</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiences Section -->
+    <section class="experiences bg-cream" id="experiences">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-subtitle">Beyond the Room</p>
+                <h2 class="section-title text-forest">Curated Experiences</h2>
+                <p class="section-desc text-forest-light">Moments designed to elevate your stay into a story worth telling.</p>
+            </div>
+            
+            <div class="exp-grid">
+                <!-- Exp 1 -->
+                <div class="exp-card group animate-on-scroll" data-exp-type="dining">
+                    <img src="images/dining.jpg" alt="Fine Dining">
+                    <div class="exp-overlay"></div>
+                    <div class="exp-content">
+                        <p class="exp-subtitle">Culinary Artistry</p>
+                        <h3>Fine Dining</h3>
+                        <p class="exp-desc">World-class cuisine crafted by Michelin-starred chefs using the finest seasonal ingredients.</p>
+                        <div class="exp-link">Discover <i data-lucide="arrow-right"></i></div>
+                    </div>
+                </div>
+                <!-- Exp 2 -->
+                <div class="exp-card group animate-on-scroll delay-1" data-exp-type="spa">
+                    <img src="images/spa.jpg" alt="Spa & Wellness">
+                    <div class="exp-overlay"></div>
+                    <div class="exp-content">
+                        <p class="exp-subtitle">Inner Serenity</p>
+                        <h3>Spa & Wellness</h3>
+                        <p class="exp-desc">Bespoke treatments and ancient healing rituals in our award-winning wellness sanctuary.</p>
+                        <div class="exp-link">Discover <i data-lucide="arrow-right"></i></div>
+                    </div>
+                </div>
+                <!-- Exp 3 -->
+                <div class="exp-card group animate-on-scroll delay-2" data-exp-type="pool">
+                    <img src="images/pool.jpg" alt="Infinity Pool">
+                    <div class="exp-overlay"></div>
+                    <div class="exp-content">
+                        <p class="exp-subtitle">Endless Horizon</p>
+                        <h3>Infinity Pool</h3>
+                        <p class="exp-desc">Swim where the water meets the sky in our temperature-controlled infinity pool.</p>
+                        <div class="exp-link">Discover <i data-lucide="arrow-right"></i></div>
+                    </div>
+                </div>
+                <!-- Exp 4 -->
+                <div class="exp-card group animate-on-scroll" data-exp-type="fitness">
+                    <img src="images/fitness.jpg" alt="Fitness Center">
+                    <div class="exp-overlay"></div>
+                    <div class="exp-content">
+                        <p class="exp-subtitle">Peak Performance</p>
+                        <h3>Fitness Center</h3>
+                        <p class="exp-desc">State-of-the-art equipment with personal trainers and panoramic garden views.</p>
+                        <div class="exp-link">Discover <i data-lucide="arrow-right"></i></div>
+                    </div>
+                </div>
+                <!-- Exp 5 -->
+                <div class="exp-card group animate-on-scroll delay-1" data-exp-type="transfers">
+                    <img src="images/transfers.jpg" alt="Airport Transfers">
+                    <div class="exp-overlay"></div>
+                    <div class="exp-content">
+                        <p class="exp-subtitle">Seamless Arrival</p>
+                        <h3>Airport Transfers</h3>
+                        <p class="exp-desc">Luxury chauffeur service from the moment you land to the comfort of your suite.</p>
+                        <div class="exp-link">Discover <i data-lucide="arrow-right"></i></div>
+                    </div>
+                </div>
+                <!-- Exp 6 -->
+                <div class="exp-card group animate-on-scroll delay-2" data-exp-type="tours">
+                    <img src="images/tours.jpg" alt="Private Tours">
+                    <div class="exp-overlay"></div>
+                    <div class="exp-content">
+                        <p class="exp-subtitle">Discover & Explore</p>
+                        <h3>Private Tours</h3>
+                        <p class="exp-desc">Curated private excursions to hidden gems and cultural landmarks.</p>
+                        <div class="exp-link">Discover <i data-lucide="arrow-right"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exclusive Packages Section -->
+    <section class="packages bg-cream-light" id="packages">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-subtitle">Exclusive Packages</p>
+                <h2 class="section-title text-forest">Curated Stays for Unforgettable Moments</h2>
+                <p class="section-desc">Carefully designed luxury packages that combine accommodation, dining, wellness, transportation, and exclusive experiences.</p>
+            </div>
+            
+            <div class="packages-grid">
+                <!-- Package 1: Honeymoon Escape -->
+                <div class="package-card animate-on-scroll">
+                    <div class="package-img">
+                        <span class="package-badge-premium">BEST VALUE</span>
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/ebee99b38_generated_650bb2f1.png" alt="Honeymoon Escape">
+                    </div>
+                    <div class="package-content">
+                        <span class="package-duration-tag"><i data-lucide="clock"></i> 3 Nights / 4 Days</span>
+                        <h3>Honeymoon Escape</h3>
+                        <p class="luxury-line">Private ocean-view suite, champagne welcome, and couples spa experience.</p>
+                        <div class="package-pricing">
+                            <div class="package-value text-muted"><del>Worth $1,600</del> <span class="savings-indicator">Save 25%</span></div>
+                            <div class="package-price">Package Price <span>$1,200 /stay</span></div>
+                        </div>
+                        <ul class="package-inclusions-list">
+                            <li class="package-inclusion-item"><span class="icon">🍽</span> Complimentary Breakfast</li>
+                            <li class="package-inclusion-item"><span class="icon">🧖</span> Spa Access</li>
+                            <li class="package-inclusion-item"><span class="icon">🏖</span> Private Beach Access</li>
+                        </ul>
+                        <div class="dual-cta-container">
+                            <a href="package-details?id=honeymoon" class="btn btn-outline-forest">View Experience</a>
+                            <a href="checkout.html" onclick="bookPackageDirectly('honeymoon'); event.preventDefault();" class="btn btn-primary">Book Package</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 2: Family Getaway -->
+                <div class="package-card animate-on-scroll delay-1">
+                    <div class="package-img">
+                        <span class="package-badge-premium">MOST POPULAR</span>
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/0da436efd_generated_8210ef4a.png" alt="Family Getaway">
+                    </div>
+                    <div class="package-content">
+                        <span class="package-duration-tag"><i data-lucide="clock"></i> 3 Nights / 4 Days</span>
+                        <h3>Family Getaway</h3>
+                        <p class="luxury-line">Spacious connecting suites with endless activities for unforgettable family memories.</p>
+                        <div class="package-pricing">
+                            <div class="package-value text-muted"><del>Worth $2,000</del> <span class="savings-indicator">Save 25%</span></div>
+                            <div class="package-price">Package Price <span>$1,500 /stay</span></div>
+                        </div>
+                        <ul class="package-inclusions-list">
+                            <li class="package-inclusion-item"><span class="icon">🍽</span> Complimentary Breakfast</li>
+                            <li class="package-inclusion-item"><span class="icon">🏖</span> Private Beach Access</li>
+                            <li class="package-inclusion-item"><span class="icon">🚗</span> Airport Transfer</li>
+                        </ul>
+                        <div class="dual-cta-container">
+                            <a href="package-details?id=family" class="btn btn-outline-forest">View Experience</a>
+                            <a href="checkout.html" onclick="bookPackageDirectly('family'); event.preventDefault();" class="btn btn-primary">Book Package</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 3: Wellness & Spa Retreat -->
+                <div class="package-card animate-on-scroll delay-2">
+                    <div class="package-img">
+                        <span class="package-badge-premium">WELLNESS FAVORITE</span>
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/7e62d3cf8_generated_caebfb4c.png" alt="Wellness & Spa Retreat">
+                    </div>
+                    <div class="package-content">
+                        <span class="package-duration-tag"><i data-lucide="clock"></i> 2 Nights / 3 Days</span>
+                        <h3>Wellness & Spa Retreat</h3>
+                        <p class="luxury-line">A rejuvenating escape focused on holistic wellness, deep relaxation, and mindfulness.</p>
+                        <div class="package-pricing">
+                            <div class="package-value text-muted"><del>Worth $1,100</del> <span class="savings-indicator">Save 22%</span></div>
+                            <div class="package-price">Package Price <span>$850 /stay</span></div>
+                        </div>
+                        <ul class="package-inclusions-list">
+                            <li class="package-inclusion-item"><span class="icon">🧖</span> Spa Access</li>
+                            <li class="package-inclusion-item"><span class="icon">💆</span> Wellness Treatments</li>
+                            <li class="package-inclusion-item"><span class="icon">🍽</span> Complimentary Breakfast</li>
+                        </ul>
+                        <div class="dual-cta-container">
+                            <a href="package-details?id=wellness" class="btn btn-outline-forest">View Experience</a>
+                            <a href="checkout.html" onclick="bookPackageDirectly('wellness'); event.preventDefault();" class="btn btn-primary">Book Package</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 4: Corporate Executive -->
+                <div class="package-card animate-on-scroll">
+                    <div class="package-img">
+                        <span class="package-badge-premium">BUSINESS CHOICE</span>
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/b02b09e51_generated_f6873443.png" alt="Corporate Executive Package">
+                    </div>
+                    <div class="package-content">
+                        <span class="package-duration-tag"><i data-lucide="clock"></i> Business Package</span>
+                        <h3>Corporate Executive</h3>
+                        <p class="luxury-line">Seamlessly blend business and luxury with executive privileges and dedicated service.</p>
+                        <div class="package-pricing">
+                            <div class="package-value text-muted"><del>Worth $1,400</del> <span class="savings-indicator">Save 21%</span></div>
+                            <div class="package-price">Package Price <span>$1,100 /stay</span></div>
+                        </div>
+                        <ul class="package-inclusions-list">
+                            <li class="package-inclusion-item"><span class="icon">🚗</span> Airport Transfer</li>
+                            <li class="package-inclusion-item"><span class="icon">🍽</span> Complimentary Breakfast</li>
+                            <li class="package-inclusion-item"><span class="icon">👑</span> Executive Lounge Access</li>
+                        </ul>
+                        <div class="dual-cta-container">
+                            <a href="package-details?id=corporate" class="btn btn-outline-forest">View Experience</a>
+                            <a href="checkout.html" onclick="bookPackageDirectly('corporate'); event.preventDefault();" class="btn btn-primary">Book Package</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 5: Presidential Experience -->
+                <div class="package-card featured-presidential animate-on-scroll delay-1">
+                    <div class="package-img">
+                        <span class="package-badge-premium">VIP EXCLUSIVE</span>
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/5652f2763_generated_68e877e7.png" alt="Presidential Experience">
+                    </div>
+                    <div class="package-content">
+                        <span class="package-duration-tag"><i data-lucide="clock"></i> VIP Luxury Experience</span>
+                        <h3>Presidential Experience</h3>
+                        <p class="luxury-line text-gold">The ultimate expression of luxury living with unparalleled privacy, space, and bespoke service.</p>
+                        <div class="package-pricing">
+                            <div class="package-value text-muted-light"><del>Worth $5,000</del> <span class="savings-indicator">Save 30%</span></div>
+                            <div class="package-price text-white">Package Price <span class="text-white">$3,500 /stay</span></div>
+                        </div>
+                        <ul class="package-inclusions-list">
+                            <li class="package-inclusion-item"><span class="icon">👑</span> Butler Service</li>
+                            <li class="package-inclusion-item"><span class="icon">🧖</span> Spa Access</li>
+                            <li class="package-inclusion-item"><span class="icon">🚗</span> Airport Transfer</li>
+                            <li class="package-inclusion-item"><span class="icon">🍽</span> Complimentary Breakfast</li>
+                        </ul>
+                        <div class="dual-cta-container">
+                            <a href="package-details?id=presidential" class="btn btn-outline-cream">View Experience</a>
+                            <a href="checkout.html" onclick="bookPackageDirectly('presidential'); event.preventDefault();" class="btn btn-gold">Book Package</a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </section>
+
+    <!-- AI Concierge Section -->
+    <section class="ai-concierge" id="ai-concierge">
+        <div class="container ai-concierge-container">
+            <!-- Left Side: Copy -->
+            <div class="ai-content animate-on-scroll">
+                <span class="ai-label"><i data-lucide="sparkles"></i> AI Hospitality Assistant</span>
+                <h2 class="section-title text-cream">Your Personal Concierge, Available 24/7</h2>
+                <p class="ai-desc">From room recommendations and dining reservations to airport transfers and celebration planning, our AI Concierge creates personalized experiences tailored to every guest.</p>
+                <ul class="ai-features">
+                    <li><i data-lucide="check-circle-2"></i> Personalized Room Recommendations</li>
+                    <li><i data-lucide="check-circle-2"></i> Dining & Restaurant Reservations</li>
+                    <li><i data-lucide="check-circle-2"></i> Airport Transfers</li>
+                    <li><i data-lucide="check-circle-2"></i> Event & Celebration Planning</li>
+                    <li><i data-lucide="check-circle-2"></i> Local Experience Suggestions</li>
+                    <li><i data-lucide="check-circle-2"></i> VIP Guest Services</li>
+                </ul>
+                <div class="ai-actions">
+                    <button class="btn btn-gold">Start Conversation</button>
+                    <button class="btn btn-outline-cream">See How It Works</button>
+                </div>
+                
+                <div class="ai-trust-indicators">
+                    <span><i data-lucide="check"></i> Available 24/7</span>
+                    <span><i data-lucide="check"></i> Instant Recommendations</span>
+                    <span><i data-lucide="check"></i> Personalized Experiences</span>
+                    <span><i data-lucide="check"></i> Secure & Private</span>
+                </div>
+            </div>
+
+            <!-- Right Side: Chat Interface -->
+            <div class="ai-chat-wrapper animate-on-scroll delay-1">
+                <div class="ai-chat-card glass-card">
+                    <!-- Chat Header -->
+                    <div class="chat-header">
+                        <div class="chat-avatar">
+                            <span>🤖</span>
+                        </div>
+                        <div class="chat-title-info">
+                            <h4>AI Concierge</h4>
+                            <span class="chat-status"><span class="status-dot"></span> Online • Available 24/7</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Body -->
+                    <div class="chat-body">
+                        <!-- Message User -->
+                        <div class="chat-message user">
+                            <div class="message-bubble">I need a honeymoon suite for 3 nights.</div>
+                        </div>
+                        <!-- Message AI -->
+                        <div class="chat-message ai">
+                            <div class="chat-avatar-small">🤖</div>
+                            <div class="message-bubble">I recommend our Executive Ocean Suite with complimentary breakfast and spa access.</div>
+                        </div>
+                        <!-- Message User -->
+                        <div class="chat-message user delay-1">
+                            <div class="message-bubble">Plan a birthday celebration for 50 guests.</div>
+                        </div>
+                        <!-- Message AI -->
+                        <div class="chat-message ai delay-2">
+                            <div class="chat-avatar-small">🤖</div>
+                            <div class="message-bubble">I recommend our Grand Celebration Hall with premium catering and decoration packages.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="chat-quick-actions">
+                        <span class="chat-chip">Recommend a Room</span>
+                        <span class="chat-chip">Plan an Event</span>
+                        <span class="chat-chip">Airport Transfer</span>
+                        <span class="chat-chip">Dining Options</span>
+                        <span class="chat-chip">VIP Services</span>
+                    </div>
+                    
+                    <!-- Chat Input -->
+                    <div class="chat-input-area">
+                        <div class="chat-input-fake">
+                            <span>Type a message...</span>
+                            <button class="chat-send-btn"><i data-lucide="send"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="events bg-forest" id="events">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-subtitle">Celebrate With Us</p>
+                <h2 class="section-title text-cream">Events & Celebrations</h2>
+                <p class="section-desc text-cream-light">From intimate gatherings to grand occasions, every event becomes an unforgettable chapter.</p>
+            </div>
+            
+            <div class="events-grid">
+                <!-- Card 1: Birthday Celebrations -->
+                <div class="event-card-luxury animate-on-scroll">
+                    <div class="event-img-container">
+                        <span class="event-availability-badge">Available This Week</span>
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/b1846865d_generated_bc5ff1e5.png" alt="Birthday Celebrations">
+                    </div>
+                    <div class="event-luxury-content">
+                        <span class="event-ai-badge" style="display:inline-block; font-size:10px; font-weight:700; color:var(--gold); border:1px solid rgba(212,175,55,0.4); background:rgba(212,175,55,0.1); padding:2px 8px; border-radius:12px; margin-bottom:8px; width:fit-content; text-transform:uppercase; letter-spacing:0.5px;">🤖 Perfect for Birthdays</span>
+                        <h3>Birthday Celebrations</h3>
+                        <div class="event-card-rating" style="display:flex; align-items:center; gap:4px; font-size:12px; color:rgba(250,246,237,0.7); margin-top:-4px; margin-bottom:12px;">
+                            <i data-lucide="star" style="width:13px; height:13px; fill:var(--gold); color:var(--gold);"></i>
+                            <span style="font-weight:600; color:var(--gold);">4.9</span>
+                            <span>(128 Events Hosted)</span>
+                        </div>
+                        <div class="event-luxury-meta" style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: 1px solid rgba(250, 246, 237, 0.1); padding-bottom: 12px; margin-bottom: 16px; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                                <span class="event-capacity-tag" style="font-size: 13px; color: rgba(250, 246, 237, 0.7); display: flex; align-items: center; gap: 6px;"><i data-lucide="users" style="width: 14px; height: 14px;"></i> 20-100 Guests</span>
+                                <span class="event-starting-price" style="font-size: 14px; color: var(--gold); font-weight: 600;">Starting from $499</span>
+                            </div>
+                            <div class="event-venue-info" style="font-size: 12px; color: rgba(250, 246, 237, 0.6); display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                                <i data-lucide="map-pin" style="width: 13px; height: 13px; color: var(--gold);"></i>
+                                <span>Grand Celebration Hall (15,000 sq ft)</span>
+                            </div>
+                        </div>
+                        <ul class="event-highlights-list">
+                            <li class="event-highlight-item"><span class="icon">✓</span> Catering Included</li>
+                            <li class="event-highlight-item"><span class="icon">✓</span> Decoration Included</li>
+                            <li class="event-highlight-item"><span class="icon">✓</span> Event Coordinator</li>
+                        </ul>
+                        <div class="event-dual-cta">
+                            <a href="event-details?id=birthday" class="btn btn-outline-cream">View Details</a>
+                            <button onclick="planEvent('birthday')" class="btn btn-gold">Get Proposal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Corporate Events -->
+                <div class="event-card-luxury animate-on-scroll delay-1">
+                    <div class="event-img-container">
+                        <span class="event-availability-badge">Limited Availability</span>
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/b02b09e51_generated_f6873443.png" alt="Corporate Events">
+                    </div>
+                    <div class="event-luxury-content">
+                        <span class="event-ai-badge" style="display:inline-block; font-size:10px; font-weight:700; color:var(--gold); border:1px solid rgba(212,175,55,0.4); background:rgba(212,175,55,0.1); padding:2px 8px; border-radius:12px; margin-bottom:8px; width:fit-content; text-transform:uppercase; letter-spacing:0.5px;">🤖 Best for Conferences</span>
+                        <h3>Corporate Events</h3>
+                        <div class="event-card-rating" style="display:flex; align-items:center; gap:4px; font-size:12px; color:rgba(250,246,237,0.7); margin-top:-4px; margin-bottom:12px;">
+                            <i data-lucide="star" style="width:13px; height:13px; fill:var(--gold); color:var(--gold);"></i>
+                            <span style="font-weight:600; color:var(--gold);">4.8</span>
+                            <span>(94 Corporate Events)</span>
+                        </div>
+                        <div class="event-luxury-meta" style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: 1px solid rgba(250, 246, 237, 0.1); padding-bottom: 12px; margin-bottom: 16px; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                                <span class="event-capacity-tag" style="font-size: 13px; color: rgba(250, 246, 237, 0.7); display: flex; align-items: center; gap: 6px;"><i data-lucide="users" style="width: 14px; height: 14px;"></i> 50-500 Guests</span>
+                                <span class="event-starting-price" style="font-size: 14px; color: var(--gold); font-weight: 600;">Starting from $999</span>
+                            </div>
+                            <div class="event-venue-info" style="font-size: 12px; color: rgba(250, 246, 237, 0.6); display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                                <i data-lucide="map-pin" style="width: 13px; height: 13px; color: var(--gold);"></i>
+                                <span>Skyline Conference Hall (8,000 sq ft)</span>
+                            </div>
+                        </div>
+                        <ul class="event-highlights-list">
+                            <li class="event-highlight-item"><span class="icon">✓</span> Premium Venue Access</li>
+                            <li class="event-highlight-item"><span class="icon">✓</span> Catering Included</li>
+                            <li class="event-highlight-item"><span class="icon">✓</span> Event Coordinator</li>
+                        </ul>
+                        <div class="event-dual-cta">
+                            <a href="event-details?id=corporate" class="btn btn-outline-cream">View Details</a>
+                            <button onclick="planEvent('corporate')" class="btn btn-gold">Get Proposal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Wedding Packages -->
+                <div class="event-card-luxury animate-on-scroll">
+                    <div class="event-img-container">
+                        <span class="event-availability-badge">Only 2 Dates Left</span>
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/ebee99b38_generated_650bb2f1.png" alt="Wedding Packages">
+                    </div>
+                    <div class="event-luxury-content">
+                        <span class="event-ai-badge" style="display:inline-block; font-size:10px; font-weight:700; color:var(--gold); border:1px solid rgba(212,175,55,0.4); background:rgba(212,175,55,0.1); padding:2px 8px; border-radius:12px; margin-bottom:8px; width:fit-content; text-transform:uppercase; letter-spacing:0.5px;">🤖 95% Match for Weddings</span>
+                        <h3>Wedding Packages</h3>
+                        <div class="event-card-rating" style="display:flex; align-items:center; gap:4px; font-size:12px; color:rgba(250,246,237,0.7); margin-top:-4px; margin-bottom:12px;">
+                            <i data-lucide="star" style="width:13px; height:13px; fill:var(--gold); color:var(--gold);"></i>
+                            <span style="font-weight:600; color:var(--gold);">5.0</span>
+                            <span>(210 Weddings)</span>
+                        </div>
+                        <div class="event-luxury-meta" style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: 1px solid rgba(250, 246, 237, 0.1); padding-bottom: 12px; margin-bottom: 16px; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                                <span class="event-capacity-tag" style="font-size: 13px; color: rgba(250, 246, 237, 0.7); display: flex; align-items: center; gap: 6px;"><i data-lucide="users" style="width: 14px; height: 14px;"></i> 100-1000 Guests</span>
+                                <span class="event-starting-price" style="font-size: 14px; color: var(--gold); font-weight: 600;">Starting from $5,000</span>
+                            </div>
+                            <div class="event-venue-info" style="font-size: 12px; color: rgba(250, 246, 237, 0.6); display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                                <i data-lucide="map-pin" style="width: 13px; height: 13px; color: var(--gold);"></i>
+                                <span>Grand Ballroom & Gardens (15,000 sq ft)</span>
+                            </div>
+                        </div>
+                        <ul class="event-highlights-list">
+                            <li class="event-highlight-item"><span class="icon">✓</span> Decoration Included</li>
+                            <li class="event-highlight-item"><span class="icon">✓</span> Catering Included</li>
+                            <li class="event-highlight-item"><span class="icon">✓</span> Event Coordinator</li>
+                            <li class="event-highlight-item"><span class="icon">✓</span> Premium Venue Access</li>
+                        </ul>
+                        <div class="event-dual-cta">
+                            <a href="event-details?id=wedding" class="btn btn-outline-cream">View Details</a>
+                            <button onclick="planEvent('wedding')" class="btn btn-gold">Get Proposal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: VIP Gatherings -->
+                <div class="event-card-luxury animate-on-scroll delay-1">
+                    <div class="event-img-container">
+                        <span class="event-availability-badge">High Demand</span>
+                        <img src="https://media.base44.com/images/public/6a350ca615156d469eb82de4/53983d52a_generated_6b5bec35.png" alt="VIP Gatherings">
+                    </div>
+                    <div class="event-luxury-content">
+                        <span class="event-ai-badge" style="display:inline-block; font-size:10px; font-weight:700; color:var(--gold); border:1px solid rgba(212,175,55,0.4); background:rgba(212,175,55,0.1); padding:2px 8px; border-radius:12px; margin-bottom:8px; width:fit-content; text-transform:uppercase; letter-spacing:0.5px;">🤖 Ideal for VIPs</span>
+                        <h3>VIP Gatherings</h3>
+                        <div class="event-card-rating" style="display:flex; align-items:center; gap:4px; font-size:12px; color:rgba(250,246,237,0.7); margin-top:-4px; margin-bottom:12px;">
+                            <i data-lucide="star" style="width:13px; height:13px; fill:var(--gold); color:var(--gold);"></i>
+                            <span style="font-weight:600; color:var(--gold);">4.9</span>
+                            <span>(45 VIP Gatherings)</span>
+                        </div>
+                        <div class="event-luxury-meta" style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: 1px solid rgba(250, 246, 237, 0.1); padding-bottom: 12px; margin-bottom: 16px; width: 100%;">
+                            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                                <span class="event-capacity-tag" style="font-size: 13px; color: rgba(250, 246, 237, 0.7); display: flex; align-items: center; gap: 6px;"><i data-lucide="users" style="width: 14px; height: 14px;"></i> 10-50 Guests</span>
+                                <span class="event-starting-price" style="font-size: 14px; color: var(--gold); font-weight: 600;">Starting from $2,500</span>
+                            </div>
+                            <div class="event-venue-info" style="font-size: 12px; color: rgba(250, 246, 237, 0.6); display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                                <i data-lucide="map-pin" style="width: 13px; height: 13px; color: var(--gold);"></i>
+                                <span>VIP Lounge (2,500 sq ft)</span>
+                            </div>
+                        </div>
+                        <ul class="event-highlights-list">
+                            <li class="event-highlight-item"><span class="icon">✓</span> Premium Venue Access</li>
+                            <li class="event-highlight-item"><span class="icon">✓</span> Event Coordinator</li>
+                            <li class="event-highlight-item"><span class="icon">✓</span> Catering Included</li>
+                        </ul>
+                        <div class="event-dual-cta">
+                            <a href="event-details?id=vip" class="btn btn-outline-cream">View Details</a>
+                            <button onclick="planEvent('vip')" class="btn btn-gold">Get Proposal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Event Concierge -->
+            <div class="ai-event-concierge-section animate-on-scroll" id="aiEventConcierge">
+                <div class="ai-concierge-header">
+                    <h3><i data-lucide="sparkles" style="color: var(--gold); display: inline-block; vertical-align: middle; margin-right: 6px; width: 22px; height: 22px;"></i> AI Event Concierge</h3>
+                    <p>Provide your basic event parameters to receive a custom venue, package, and cost recommendation instantly.</p>
+                    <div id="aiConciergePromoMsg" style="display: none; background: rgba(212,175,55,0.12); border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; padding: 12px 16px; margin-top: 16px; font-size: 13px; color: var(--gold); font-family: var(--font-body); animation: fadeIn 0.4s ease; text-align: left;"></div>
+                </div>
+                <div class="ai-concierge-grid">
+                    <div class="ai-input-group">
+                        <label for="aiEventType">Event Type</label>
+                        <select id="aiEventType">
+                            <option value="">Select Event Type...</option>
+                            <option value="birthday">Birthday Celebration</option>
+                            <option value="corporate">Corporate Event</option>
+                            <option value="wedding">Wedding Ceremony</option>
+                            <option value="vip">VIP Gathering</option>
+                        </select>
+                    </div>
+                    <div class="ai-input-group">
+                        <label for="aiGuestCount">Guest Count</label>
+                        <input type="number" id="aiGuestCount" min="1" placeholder="Number of guests">
+                    </div>
+                    <div class="ai-input-group">
+                        <label for="aiBudget">Estimated Budget</label>
+                        <select id="aiBudget">
+                            <option value="">Select Budget Range...</option>
+                            <option value="economy">Bespoke Boutique (Under $2,500)</option>
+                            <option value="standard">Elegant Mid-Tier ($2,500 - $10,000)</option>
+                            <option value="premium">Elite Premium ($10,000 - $25,000)</option>
+                            <option value="luxury">Presidential Luxury ($25,000+)</option>
+                        </select>
+                    </div>
+                    <div class="ai-input-group">
+                        <label for="aiEventDate">Preferred Date</label>
+                        <input type="date" id="aiEventDate">
+                    </div>
+                </div>
+                <div id="aiConciergeError" style="color: #0abfac; text-align: center; font-size: 13px; margin-top: -10px; margin-bottom: 20px; display: none;">Please fill in all fields.</div>
+                <div class="ai-btn-container">
+                    <button onclick="getAIRecommendation()" class="btn btn-gold btn-lg"><i data-lucide="sparkles" style="width: 16px; height: 16px;"></i> Get AI Recommendation</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials bg-cream" id="testimonials">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-subtitle">Why Guests Love Us</p>
+                <h2 class="section-title">Memorable Experiences, Trusted by Thousands</h2>
+            </div>
+            
+            <!-- Trust Banner -->
+            <div class="trust-banner animate-on-scroll delay-1">
+                <div class="trust-item">
+                    <div class="trust-icon"><i data-lucide="star" class="text-gold star-fill"></i></div>
+                    <div class="trust-text"><strong>4.9/5</strong> Average Rating</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon"><i data-lucide="users" class="text-primary"></i></div>
+                    <div class="trust-text"><strong>10,000+</strong> Happy Guests</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon"><i data-lucide="clock" class="text-primary"></i></div>
+                    <div class="trust-text"><strong>24/7</strong> Concierge Service</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon"><i data-lucide="heart" class="text-primary"></i></div>
+                    <div class="trust-text"><strong>95%</strong> Repeat Satisfaction</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon"><i data-lucide="globe" class="text-primary"></i></div>
+                    <div class="trust-text"><strong>80+</strong> Countries Served</div>
+                </div>
+            </div>
+
+            <!-- Review Cards -->
+            <div class="testimonials-grid">
+                <!-- Review 1 -->
+                <div class="testimonial-card animate-on-scroll">
+                    <div class="review-stars">
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                    </div>
+                    <p class="review-text">"From check-in to checkout, every detail felt effortless and personalized."</p>
+                    <div class="guest-profile">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sophia R." class="guest-avatar-img">
+                        <div class="guest-info">
+                            <h4>Sophia R.</h4>
+                            <p>New York, USA</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="testimonial-card animate-on-scroll delay-1">
+                    <div class="review-stars">
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                    </div>
+                    <p class="review-text">"The Presidential Experience exceeded every expectation. Truly world-class hospitality."</p>
+                    <div class="guest-profile">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="James M." class="guest-avatar-img">
+                        <div class="guest-info">
+                            <h4>James M.</h4>
+                            <p>London, UK</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="testimonial-card animate-on-scroll delay-2">
+                    <div class="review-stars">
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                        <i data-lucide="star" class="text-gold star-fill"></i>
+                    </div>
+                    <p class="review-text">"Our anniversary celebration was unforgettable. The concierge handled everything perfectly."</p>
+                    <div class="guest-profile">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Priya S." class="guest-avatar-img">
+                        <div class="guest-info">
+                            <h4>Priya S.</h4>
+                            <p>Mumbai, India</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-newsletter">
+            <div class="container newsletter-inner">
+                <div class="newsletter-text">
+                    <p class="newsletter-subtitle">STAY CONNECTED</p>
+                    <h2>Receive Exclusive Offers</h2>
+                </div>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Your email address">
+                    <button class="btn btn-primary">SUBSCRIBE</button>
+                </div>
+            </div>
+        </div>
+        <div class="container footer-content">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>Flex-Stays</h2>
+                    <p class="brand-subtitle">HOTELS & RESORTS</p>
+                    <p class="brand-desc">A sanctuary where luxury meets serenity. Every stay is an invitation to experience the extraordinary.</p>
+                    <ul class="contact-list">
+                        <li><i data-lucide="map-pin"></i> 712 Coastal Drive, Melbourne</li>
+                        <li><i data-lucide="phone"></i> +1 (800) 222-8888</li>
+                        <li><i data-lucide="mail"></i> reservations@flexstays.com</li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#rooms">Rooms</a></li>
+                        <li><a href="#dining">Dining</a></li>
+                        <li><a href="#experiences">Experiences</a></li>
+                        <li><a href="#events">Events</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Rooms</h3>
+                    <ul>
+                        <li><a href="#">Standard Room</a></li>
+                        <li><a href="#">Deluxe Room</a></li>
+                        <li><a href="#">Executive Suite</a></li>
+                        <li><a href="#">Presidential Suite</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Spa & Wellness</a></li>
+                        <li><a href="#">Airport Transfers</a></li>
+                        <li><a href="#">Private Tours</a></li>
+                        <li><a href="#">Concierge</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Flex-Stays Hotels & Resorts. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Luxury Dining Reservation Modal -->
+    <div id="diningReservationModal" class="dining-modal-overlay">
+        <div class="dining-modal-content">
+            <button class="dining-modal-close" id="closeDiningModalBtn"><i data-lucide="x"></i></button>
+            <div class="dining-modal-header">
+                <h2>Reserve Your Dining Experience</h2>
+                <p>The Culinary Atelier</p>
+            </div>
+            
+            <div id="diningReservationFormState">
+                <!-- AI Concierge Suggestions -->
+                <div class="dining-ai-suggestions">
+                    <h4><i data-lucide="bot" style="color:var(--gold); width:16px;"></i> AI Dining Concierge Suggestions</h4>
+                    <div class="dining-ai-pills">
+                        <span class="ai-pill" data-exp="Romantic Sunset Dinner">Romantic Sunset Dinner</span>
+                        <span class="ai-pill" data-exp="Chef's Signature Tasting">Chef's Signature Tasting</span>
+                        <span class="ai-pill" data-exp="Seafood Experience">Seafood Experience</span>
+                        <span class="ai-pill" data-exp="Wine Pairing Evening">Wine Pairing Evening</span>
+                        <span class="ai-pill" data-exp="Family Dining Package">Family Dining Package</span>
+                    </div>
+                </div>
+
+                <form id="diningReservationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="resName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="resEmail" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="resPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Guests</label>
+                            <input type="number" id="diningResGuests" min="1" max="20" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Reservation Date</label>
+                            <input type="date" id="diningResDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Reservation Time</label>
+                            <input type="time" id="diningResTime" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;">
+                            <label>Seating Preference</label>
+                            <select id="resSeating" required>
+                                <option value="" disabled selected>Select Seating</option>
+                                <option value="Indoor Dining">Indoor Dining</option>
+                                <option value="Outdoor Terrace">Outdoor Terrace</option>
+                                <option value="Poolside Dining">Poolside Dining</option>
+                                <option value="Private Dining">Private Dining</option>
+                                <option value="VIP Chef's Table">VIP Chef's Table</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Experience (Optional)</label>
+                            <input type="text" id="resExperience" placeholder="e.g. Romantic Sunset Dinner" readonly style="background:var(--cream-light); cursor:default;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Special Requests</label>
+                        <textarea id="diningResRequests" rows="3" placeholder="Examples: Anniversary Celebration, Birthday Setup, Vegetarian Menu, Wheelchair Access"></textarea>
+                    </div>
+                    <div id="diningFormError" class="dining-error-msg"></div>
+                    <button type="submit" class="btn btn-primary btn-full">Confirm Reservation</button>
+                </form>
+            </div>
+
+            <!-- Success State -->
+            <div id="diningSuccessState" style="display:none; text-align:center; padding: 40px 20px;">
+                <div class="success-icon-wrapper" style="margin: 0 auto 20px; display:flex; justify-content:center;">
+                    <i data-lucide="check-circle" style="color:var(--primary); width:64px; height:64px;"></i>
+                </div>
+                <h3 style="color:var(--forest); margin-bottom:16px;">Dining Reservation Confirmed</h3>
+                <p style="margin-bottom:8px; color:var(--text-main);">Reservation ID: <strong id="successResId">DIN-XXXX</strong></p>
+                <div style="background:var(--cream-light); padding:16px; border-radius:8px; margin-bottom:24px; text-align:left; max-width:300px; margin-left:auto; margin-right:auto;">
+                    <p style="margin-bottom:4px;"><strong>Date:</strong> <span id="successDate"></span></p>
+                    <p style="margin-bottom:4px;"><strong>Time:</strong> <span id="successTime"></span></p>
+                    <p style="margin-bottom:0;"><strong>Guests:</strong> <span id="successGuests"></span></p>
+                </div>
+                <p style="color:var(--text-muted); font-size:14px;">A confirmation email will be sent shortly.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dining Gallery Modal -->
+    <div id="diningGalleryModal" class="dining-modal-overlay">
+        <div class="dining-modal-content" style="max-width: 750px;">
+            <button class="dining-modal-close" id="closeGalleryModalBtn"><i data-lucide="x"></i></button>
+            
+            <!-- Gallery Slideshow -->
+            <div class="gallery-slideshow" style="position: relative; height: 350px; background: #000; overflow: hidden;">
+                <img id="galleryActiveImg" src="" alt="Active Image" style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease;">
+                <!-- Slideshow Navigation -->
+                <button id="galleryPrevBtn" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: var(--transition);"><i data-lucide="chevron-left"></i></button>
+                <button id="galleryNextBtn" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: var(--transition);"><i data-lucide="chevron-right"></i></button>
+                
+                <!-- Image Caption overlay -->
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 24px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: #fff; text-align: left;">
+                    <h3 id="galleryTitle" style="font-size: 20px; font-family: var(--font-heading); margin: 0 0 4px 0;">Restaurant Interior</h3>
+                    <p id="galleryPhotoCounter" style="font-size: 13px; color: rgba(255,255,255,0.7); margin: 0;">Photo 1 of 3</p>
+                </div>
+            </div>
+
+            <!-- Details Body -->
+            <div style="padding: 30px; text-align: left;">
+                <div style="margin-bottom: 30px;">
+                    <div id="galleryDetailsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                        <!-- Dynamic Details populated by JS -->
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 16px; justify-content: flex-end; border-top: 1px solid rgba(13, 42, 42, 0.08); padding-top: 20px;">
+                    <button class="btn btn-outline-forest" id="galleryCloseTextBtn">Close Gallery</button>
+                    <button class="btn btn-primary" id="galleryReserveBtn">Reserve Table</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Experiences Modal -->
+    <div id="experiencesModal" class="dining-modal-overlay">
+        <div class="dining-modal-content" style="max-width: 650px;">
+            <button class="dining-modal-close" id="closeExpModalBtn"><i data-lucide="x"></i></button>
+            
+            <!-- Banner Image -->
+            <div style="position: relative; height: 260px; background: #000; overflow: hidden;">
+                <img id="expModalImg" src="" alt="Experience Image" style="width: 100%; height: 100%; object-fit: cover;">
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); color: #fff; text-align: left;">
+                    <p id="expModalSubtitle" style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); font-weight: 600; margin: 0 0 4px 0;">Culinary Artistry</p>
+                    <h3 id="expModalTitle" style="font-size: 24px; font-family: var(--font-heading); margin: 0;">Fine Dining</h3>
+                </div>
+            </div>
+
+            <!-- Details Inclusions -->
+            <div style="padding: 30px; text-align: left;">
+                <p id="expModalDesc" style="color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 24px;">World-class cuisine crafted by Michelin-starred chefs.</p>
+                
+                <h4 style="font-size: 12px; text-transform: uppercase; color: var(--forest); letter-spacing: 0.5px; margin: 0 0 16px 0; font-weight: 700; border-bottom: 1px solid rgba(13, 42, 42, 0.08); padding-bottom: 8px;" id="expSectionHeader">Experience Details</h4>
+                
+                <div id="expDetailsContainer" style="display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 30px;">
+                    <!-- Dynamically populated detail rows -->
+                </div>
+
+                <div style="display: flex; gap: 16px; justify-content: flex-end; border-top: 1px solid rgba(13, 42, 42, 0.08); padding-top: 20px;">
+                    <a href="#" class="btn btn-outline-forest" id="expSecondaryBtn" style="display: none;">View Menu</a>
+                    <button class="btn btn-primary" id="expPrimaryBtn">Book Experience</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Event Recommendation Modal -->
+    <div id="eventRecModal" class="rec-modal-overlay">
+        <div class="rec-modal-content">
+            <button class="rec-close-btn" id="closeRecModalBtn"><i data-lucide="x"></i></button>
+            
+            <div id="recModalMainState">
+                <h3 class="rec-section-title">AI Custom Recommendation</h3>
+                <div class="rec-grid">
+                    <div class="rec-info-box">
+                        <h4>Recommended Venue</h4>
+                        <p id="recVenue">Grand Celebration Hall</p>
+                    </div>
+                    <div class="rec-info-box">
+                        <h4>Estimated Cost</h4>
+                        <p id="recCost">$2,499</p>
+                    </div>
+                    <div class="rec-info-box">
+                        <h4>Package Tier</h4>
+                        <p id="recPackage">Bespoke Celebration Package</p>
+                    </div>
+                    <div class="rec-info-box">
+                        <h4>Availability Status</h4>
+                        <p id="recAvailability" style="color: #0abfac;">Available on Requested Date</p>
+                    </div>
+                    <div class="rec-info-box rec-highlights">
+                        <h4>Included Services</h4>
+                        <p id="recHighlights" style="font-weight: normal; font-size: 14px; line-height: 1.5; color: var(--text-main);">
+                            Custom decoration, gourmet catering, professional photography, sound system, and a dedicated event coordinator.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Lead Capture Form -->
+                <div class="rec-lead-capture">
+                    <h3>Request Custom Proposal</h3>
+                    <form id="recLeadForm" onsubmit="submitEventInquiry(event)">
+                        <div class="rec-form-row" style="margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight:600;">Full Name</label>
+                                <input type="text" id="recLeadName" required placeholder="Your name" style="padding: 8px 12px; border-radius:6px; border:1px solid rgba(0,0,0,0.1); outline:none; font-size: 14px;">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight:600;">Email Address</label>
+                                <input type="email" id="recLeadEmail" required placeholder="your@email.com" style="padding: 8px 12px; border-radius:6px; border:1px solid rgba(0,0,0,0.1); outline:none; font-size: 14px;">
+                            </div>
+                        </div>
+                        <div class="rec-form-row" style="margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight:600;">Phone Number</label>
+                                <input type="tel" id="recLeadPhone" required placeholder="Phone number" style="padding: 8px 12px; border-radius:6px; border:1px solid rgba(0,0,0,0.1); outline:none; font-size: 14px;">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight:600;">Event Date</label>
+                                <input type="date" id="recLeadDate" required style="padding: 8px 12px; border-radius:6px; border:1px solid rgba(0,0,0,0.1); outline:none; font-size: 14px;">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Submit Proposal Request</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Success State -->
+            <div id="recSuccessState" style="display:none; text-align:center; padding: 30px 10px;">
+                <div style="background: rgba(10, 191, 172, 0.1); color: #0abfac; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;"><i data-lucide="check" style="width: 32px; height: 32px;"></i></div>
+                <h3 style="font-family: var(--font-heading); color: var(--forest); font-size: 22px; margin-bottom: 12px;">Proposal Request Sent</h3>
+                <p style="color: var(--text-main); font-size: 14px; margin-bottom: 20px; line-height: 1.5;">Thank you! Your inquiry has been logged. Our dedicated luxury event coordinators will review your parameters and email you a customized proposal within 24 hours.</p>
+                <button onclick="closeRecModal()" class="btn btn-primary" style="margin: 0 auto;">Close Window</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="roomsData.js"></script>
+    <script src="packagesData.js"></script>
+    <script src="eventsData.js"></script>
+    <script src="menuData.js"></script>
+    <script src="faqData.js"></script>
+    <script src="ai-concierge.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

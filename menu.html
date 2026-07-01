@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dining Menu | Flex-Stays</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* AI Sommelier Chat — Dining Page */
+        .dining-sommelier-wrap {
+            background: linear-gradient(135deg, #0d2a2a 0%, #1a1020 100%);
+            border-radius: 16px; overflow: hidden;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+            margin-bottom: 36px;
+            border: 1px solid rgba(212,175,55,0.15);
+        }
+        .dsw-header {
+            background: linear-gradient(90deg, rgba(212,175,55,0.1), transparent);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            padding: 14px 20px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .dsw-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .dsw-header h3 { color: #fff; font-size: 14px; margin-bottom: 2px; }
+        .dsw-header p  { color: rgba(255,255,255,0.45); font-size: 11px; }
+        .dsw-live {
+            margin-left: auto; background: rgba(34,197,94,0.15);
+            border: 1px solid rgba(34,197,94,0.3); color: #22c55e;
+            font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px;
+        }
+        .dsw-messages {
+            padding: 14px; min-height: 110px; max-height: 220px;
+            overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+        }
+        .dsw-messages::-webkit-scrollbar { width: 4px; }
+        .dsw-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+        .dsw-bot  { display: flex; gap: 8px; align-items: flex-start; }
+        .dsw-user { display: flex; justify-content: flex-end; }
+        .dsw-bot-bubble {
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 4px 12px 12px 12px; padding: 10px 14px;
+            font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 88%;
+        }
+        .dsw-user-bubble {
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            border-radius: 12px 4px 12px 12px; padding: 10px 14px;
+            font-size: 13px; color: #000; font-weight: 600; max-width: 75%;
+        }
+        .dsw-mini-avatar {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .dsw-chips {
+            display: flex; gap: 6px; flex-wrap: wrap;
+            padding: 0 14px 10px;
+        }
+        .dsw-chip {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 600;
+            padding: 5px 12px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+        }
+        .dsw-chip:hover { background: rgba(212,175,55,0.15); border-color: rgba(212,175,55,0.3); color: #d4af37; }
+        .dsw-input-row {
+            display: flex; gap: 8px; align-items: center; padding: 10px 14px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        #dswInput {
+            flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px; padding: 10px 16px; color: #fff;
+            font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: all 0.2s;
+        }
+        #dswInput::placeholder { color: rgba(255,255,255,0.3); }
+        #dswInput:focus { border-color: rgba(212,175,55,0.4); background: rgba(255,255,255,0.1); }
+        .dsw-send {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            border: none; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; flex-shrink: 0; transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(212,175,55,0.3);
+        }
+        .dsw-send:hover { transform: scale(1.1); }
+        @keyframes dswDot { 0%,80%,100%{transform:scale(0.6);opacity:0.3} 40%{transform:scale(1);opacity:1} }
+    </style>
+</head>
+<body class="bg-cream">
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar" style="position: fixed;">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="hotel"></i>
+                </div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="search-results.html" class="nav-item">Rooms</a>
+                <a href="menu.html" class="nav-item active">Dining</a>
+                <a href="index.html#experiences" class="nav-item">Experiences</a>
+            </div>
+            <div class="nav-actions">
+                <a href="search-results.html" class="btn btn-primary">Book Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="menu-hero" style="padding-top: 120px; padding-bottom: 40px; background: var(--forest); color: white; text-align: center;">
+        <div class="container">
+            <h1 style="font-family: 'Times New Roman', serif; font-size: 48px; margin-bottom: 16px; color: var(--gold);">The Culinary Atelier</h1>
+            <p style="font-size: 18px; max-width: 600px; margin: 0 auto; color: rgba(255,255,255,0.8);">Explore our award-winning menu and experience the finest ingredients crafted into unforgettable dishes.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" style="padding: 40px 0 100px;">
+        
+        <!-- AI Dining Sommelier Chat -->
+        <div class="dining-sommelier-wrap">
+            <div class="dsw-header">
+                <div class="dsw-avatar">
+                    <i data-lucide="bot" style="width:18px;height:18px;color:#000;"></i>
+                </div>
+                <div>
+                    <h3>AI Dining Concierge</h3>
+                    <p>Ask me anything — dishes, pairings, or tonight's best pick.</p>
+                </div>
+                <span class="dsw-live">● LIVE</span>
+            </div>
+
+            <div class="dsw-messages" id="dswMessages">
+                <div class="dsw-bot">
+                    <div class="dsw-mini-avatar">
+                        <i data-lucide="bot" style="width:13px;height:13px;color:#000;"></i>
+                    </div>
+                    <div class="dsw-bot-bubble">
+                        👨‍🍳 Welcome to The Culinary Atelier! I'm your AI Dining Concierge. Tell me what you're craving — vegetarian, spicy, romantic, or a Chef's Special — and I'll find the perfect dish for you!
+                    </div>
+                </div>
+            </div>
+
+            <div class="dsw-chips">
+                <button class="dsw-chip" onclick="dswAsk('vegetarian dishes')">🥗 Vegetarian</button>
+                <button class="dsw-chip" onclick="dswAsk('spicy food')">🌶️ Spicy</button>
+                <button class="dsw-chip" onclick="dswAsk('chef special')">⭐ Chef's Special</button>
+                <button class="dsw-chip" onclick="dswAsk('romantic dinner for two')">🕯️ Romantic</button>
+                <button class="dsw-chip" onclick="dswAsk('seafood')">🦞 Seafood</button>
+                <button class="dsw-chip" onclick="dswAsk('best desserts')">🍰 Desserts</button>
+                <button class="dsw-chip" onclick="dswAsk('Italian pasta')">🍕 Italian</button>
+                <button class="dsw-chip" onclick="dswAsk('asian food')">🍜 Asian</button>
+            </div>
+
+            <div class="dsw-input-row">
+                <input type="text" id="dswInput" placeholder="e.g. I want something light and healthy..."
+                    onkeydown="if(event.key==='Enter') dswAsk(this.value)">
+                <button class="dsw-send" onclick="dswAsk(document.getElementById('dswInput').value)">
+                    <i data-lucide="send" style="width:14px;height:14px;color:#000;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="menu-controls" style="display:flex; flex-direction:column; gap:24px; margin-bottom:40px;">
+            
+            <!-- Top Row: Categories & Search -->
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap;">
+                
+                <!-- Category Nav -->
+                <div class="menu-category-nav" style="display:flex; gap:16px; overflow-x:auto; padding-bottom:8px; flex:1;">
+                    <button class="cat-btn active" data-cat="all">All</button>
+                    <button class="cat-btn" data-cat="starters">Starters</button>
+                    <button class="cat-btn" data-cat="main">Main Course</button>
+                    <button class="cat-btn" data-cat="italian">Italian</button>
+                    <button class="cat-btn" data-cat="asian">Asian</button>
+                    <button class="cat-btn" data-cat="grills">Grills</button>
+                    <button class="cat-btn" data-cat="desserts">Desserts</button>
+                    <button class="cat-btn" data-cat="beverages">Beverages</button>
+                    <button class="cat-btn" data-cat="wine">🍷 Wine & Spirits</button>
+                </div>
+
+                <!-- Search & Sort -->
+                <div style="display:flex; gap:16px; min-width:300px;">
+                    <div class="search-box" style="position:relative; flex:1;">
+                        <i data-lucide="search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:18px; color:var(--text-muted);"></i>
+                        <input type="text" id="menuSearch" placeholder="Search food..." style="width:100%; padding:10px 10px 10px 40px; border:1px solid rgba(0,0,0,0.1); border-radius:8px; outline:none;">
+                    </div>
+                    <div class="custom-select-wrapper" style="width: 200px; z-index: 50;">
+                        <div class="custom-select menu-custom-select" id="menuSortSelect" style="background:#fff; border:1px solid rgba(0,0,0,0.1); border-radius:8px;">
+                            <span class="custom-select-trigger" style="padding:10px; color:var(--text-main); font-size:14px;">Popular</span>
+                            <div class="custom-options" style="background:#fff; border:1px solid rgba(0,0,0,0.1); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); padding:4px 0;">
+                                <span class="custom-option selected" data-value="popular" style="padding:8px 16px; color:var(--text-main); font-size:14px; cursor:pointer; display:block;">Popular</span>
+                                <span class="custom-option" data-value="price-low" style="padding:8px 16px; color:var(--text-main); font-size:14px; cursor:pointer; display:block;">Price: Low to High</span>
+                                <span class="custom-option" data-value="price-high" style="padding:8px 16px; color:var(--text-main); font-size:14px; cursor:pointer; display:block;">Price: High to Low</span>
+                                <span class="custom-option" data-value="rating" style="padding:8px 16px; color:var(--text-main); font-size:14px; cursor:pointer; display:block;">Rating</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row: Dietary Filters -->
+            <div class="dietary-filters" style="display:flex; gap:12px; flex-wrap:wrap;">
+                <span style="font-size:14px; color:var(--text-muted); display:flex; align-items:center; margin-right:8px;">Filters:</span>
+                <label class="filter-chip">
+                    <input type="checkbox" value="vegetarian"> <span>Vegetarian</span>
+                </label>
+                <label class="filter-chip">
+                    <input type="checkbox" value="vegan"> <span>Vegan</span>
+                </label>
+                <label class="filter-chip">
+                    <input type="checkbox" value="gluten-free"> <span>Gluten Free</span>
+                </label>
+                <label class="filter-chip">
+                    <input type="checkbox" value="spicy"> <span>Spicy</span>
+                </label>
+                <label class="filter-chip">
+                    <input type="checkbox" value="chef"> <span>Chef Recommended</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Food Grid Container -->
+        <div class="menu-grid" id="menuGrid">
+            <!-- Food cards dynamically injected here -->
+        </div>
+
+    </main>
+
+    <!-- Floating Cart Widget -->
+    <div id="floatingCart" class="floating-cart hidden">
+        <div class="cart-info">
+            <div class="cart-icon-wrapper">
+                <i data-lucide="shopping-cart"></i>
+                <span id="cartCount" class="cart-badge">0</span>
+            </div>
+            <div class="cart-details">
+                <span style="font-size:13px; color:rgba(255,255,255,0.8);">Dining Cart</span>
+                <strong id="cartTotal" style="font-size:18px;">$0</strong>
+            </div>
+        </div>
+        <button class="btn btn-primary" id="viewCartBtn" style="padding:10px 20px; border-radius:24px;">View Cart</button>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="toastNotification" class="toast">
+        <i data-lucide="check-circle" style="color: #2e7d32;"></i>
+        <div>
+            <h4 style="margin:0 0 4px; color:var(--forest);">Added to Cart</h4>
+            <p style="margin:0; font-size:13px; color:var(--text-muted);" id="toastDesc"></p>
+        </div>
+    </div>
+
+    <!-- Dining Reservation Modal -->
+    <div id="diningModal" style="display:none; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.6); backdrop-filter:blur(5px); align-items:center; justify-content:center;">
+        <div style="background:#fff; border:1px solid var(--gold); border-radius:16px; padding:32px; max-width:480px; width:calc(100% - 32px); box-shadow:0 10px 40px rgba(0,0,0,0.2); position:relative;">
+            <button id="closeDiningModalBtn" type="button" style="position:absolute; right:20px; top:20px; background:none; border:none; font-size:24px; color:var(--text-muted); cursor:pointer;"><i data-lucide="x"></i></button>
+            <h3 style="font-family:'Playfair Display', serif; color:var(--forest); font-size:24px; margin-top:0; margin-bottom:8px;">Reserve a Table</h3>
+            <p style="color:var(--text-muted); font-size:14px; margin-bottom:24px;">Please select your reservation details to confirm dining at The Culinary Atelier.</p>
+            <form id="diningReserveForm">
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">Reservation Date *</label>
+                    <input type="date" id="diningDate" required style="width:100%; padding:10px 14px; border:1px solid rgba(0,0,0,0.1); border-radius:8px; outline:none;">
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">Time Slot *</label>
+                    <select id="diningTime" required style="width:100%; padding:10px 14px; border:1px solid rgba(0,0,0,0.1); border-radius:8px; outline:none; background:#fff;">
+                        <option value="12:00 PM">12:00 PM (Lunch)</option>
+                        <option value="1:00 PM">1:00 PM (Lunch)</option>
+                        <option value="2:00 PM">2:00 PM (Lunch)</option>
+                        <option value="6:00 PM">6:00 PM (Dinner)</option>
+                        <option value="7:00 PM" selected>7:00 PM (Dinner)</option>
+                        <option value="8:00 PM">8:00 PM (Dinner)</option>
+                        <option value="9:00 PM">9:00 PM (Dinner)</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:24px;">
+                    <label style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">Number of Guests *</label>
+                    <select id="diningGuests" required style="width:100%; padding:10px 14px; border:1px solid rgba(0,0,0,0.1); border-radius:8px; outline:none; background:#fff;">
+                        <option value="1 Guest">1 Guest</option>
+                        <option value="2 Guests" selected>2 Guests</option>
+                        <option value="3 Guests">3 Guests</option>
+                        <option value="4 Guests">4 Guests</option>
+                        <option value="5 Guests">5 Guests</option>
+                        <option value="6+ Guests">6+ Guests</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Confirm Dining Reservation</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="roomsData.js"></script>
+    <script src="packagesData.js"></script>
+    <script src="eventsData.js"></script>
+    <script src="menuData.js"></script>
+    <script src="faqData.js"></script>
+    <script src="ai-concierge.js"></script>
+    <script src="wineData.js"></script>
+    <script src="menu.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // ── AI Dining Concierge Chat Engine ──
+        const dswRules = [
+            { keys: ['veg','vegetarian','plant','no meat','salad'], filter: function(i){ return i.isVeg; }, label: 'vegetarian options' },
+            { keys: ['spicy','hot','chilli','chili','pepper','fire'], filter: function(i){ return i.spicyLevel > 0; }, label: 'spicy dishes' },
+            { keys: ['seafood','fish','prawn','lobster','scallop','cod','tuna'], filter: function(i){ return !i.isVeg && ['starters','main','grills'].includes(i.category); }, label: 'seafood selections' },
+            { keys: ['dessert','sweet','chocolate','tart','cake','souffle'], filter: function(i){ return i.category === 'desserts'; }, label: 'desserts' },
+            { keys: ['chef','special','signature','best','recommended','top'], filter: function(i){ return i.tags.includes('chef'); }, label: "Chef's Specials" },
+            { keys: ['drink','cocktail','beverage','juice','bar'], filter: function(i){ return i.category === 'beverages'; }, label: 'beverages' },
+            { keys: ['italian','pasta','risotto','ravioli'], filter: function(i){ return i.category === 'italian'; }, label: 'Italian cuisine' },
+            { keys: ['asian','chinese','japanese','sushi','tofu','sichuan'], filter: function(i){ return i.category === 'asian'; }, label: 'Asian dishes' },
+            { keys: ['grill','bbq','steak','meat','beef','wagyu','tomahawk'], filter: function(i){ return i.category === 'grills' || i.id === 'food-001' || i.id === 'food-004'; }, label: 'grills & steaks' },
+            { keys: ['romantic','couple','date','anniversary','sunset'], filter: function(i){ return i.tags.includes('chef'); }, label: 'romantic dining picks' },
+            { keys: ['light','healthy','gluten','diet'], filter: function(i){ return i.tags.includes('gluten-free') || i.isVeg; }, label: 'light & healthy options' },
+            { keys: ['starter','appetizer','small','snack'], filter: function(i){ return i.category === 'starters'; }, label: 'starters' },
+            { keys: ['main','course','dinner','lunch','meal'], filter: function(i){ return i.category === 'main'; }, label: 'main courses' },
+            { keys: ['wine','alcohol','spirit','magic moments','magic','manstonhouse','mansion house','brandy','whisky','vodka'], filter: function(i){ return false; }, isWine: true, label: 'Wine & Spirits Selection' },
+        ];
+
+        window.dswAsk = function(query) {
+            query = (query || '').trim();
+            if (!query) return;
+            var inp = document.getElementById('dswInput');
+            if (inp) inp.value = '';
+            var msgsEl = document.getElementById('dswMessages');
+            if (!msgsEl) return;
+
+            // User bubble
+            var uRow = document.createElement('div');
+            uRow.className = 'dsw-user';
+            uRow.innerHTML = '<div class="dsw-user-bubble">' + query + '</div>';
+            msgsEl.appendChild(uRow);
+
+            // Typing dots
+            var typing = document.createElement('div');
+            typing.className = 'dsw-bot'; typing.id = 'dsw-typing';
+            typing.innerHTML = '<div class="dsw-mini-avatar"><i data-lucide="bot" style="width:13px;height:13px;color:#000;"></i></div>' +
+                '<div class="dsw-bot-bubble" style="display:flex;gap:5px;align-items:center;">' +
+                '<span style="width:6px;height:6px;border-radius:50%;background:#d4af37;display:inline-block;animation:dswDot 1.2s infinite 0s;"></span>' +
+                '<span style="width:6px;height:6px;border-radius:50%;background:#d4af37;display:inline-block;animation:dswDot 1.2s infinite 0.3s;"></span>' +
+                '<span style="width:6px;height:6px;border-radius:50%;background:#d4af37;display:inline-block;animation:dswDot 1.2s infinite 0.6s;"></span>' +
+                '</div>';
+            msgsEl.appendChild(typing);
+            lucide.createIcons();
+            msgsEl.scrollTop = msgsEl.scrollHeight;
+
+            setTimeout(function() {
+                var t = document.getElementById('dsw-typing');
+                if (t) t.remove();
+                var q = query.toLowerCase();
+                var matched = null, matchLabel = '';
+                var isWineSearch = false;
+
+                for (var r = 0; r < dswRules.length; r++) {
+                    var rule = dswRules[r];
+                    if (rule.keys.some(function(k){ return q.includes(k); })) {
+                        if (rule.isWine) {
+                            isWineSearch = true;
+                            var wData = typeof wineData !== 'undefined' ? wineData : [];
+                            if (q.includes('magic')) {
+                                wData = wData.filter(function(w){ return w.brand.toLowerCase().includes('magic'); });
+                            } else if (q.includes('manston') || q.includes('mansion')) {
+                                wData = wData.filter(function(w){ return w.brand.toLowerCase().includes('mansion'); });
+                            }
+                            matched = wData;
+                            matchLabel = rule.label;
+                            break;
+                        } else {
+                            var items = (typeof menuData !== 'undefined' ? menuData : []).filter(rule.filter);
+                            if (items.length) { matched = items; matchLabel = rule.label; break; }
+                        }
+                    }
+                }
+
+                var src = typeof menuData !== 'undefined' ? menuData : [];
+                var pool = matched ? matched.slice(0, 3) : src.filter(function(i){ return i.tags.includes('chef'); }).slice(0, 3);
+                var lbl = matched ? '\u2728 Top picks for <strong>' + matchLabel + '</strong>:' : 'No exact match \u2014 here are our <strong>Chef\'s Specials</strong>:';
+                var cards = pool.map(function(item) {
+                    var linkUrl = isWineSearch 
+                        ? 'wine.html?search=' + encodeURIComponent(item.name) + '#wineControls'
+                        : 'menu.html?search=' + encodeURIComponent(item.name.split(' ')[0]) + '#menuControls';
+                    
+                    var itemImg = item.image || (item.fallbackImage || '');
+                    
+                    return '<a href="' + linkUrl + '"' +
+                        ' style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;text-decoration:none;margin-top:6px;"' +
+                        ' onmouseover="this.style.background=\'rgba(212,175,55,0.08)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.04)\'">' +
+                        '<img src="' + itemImg + '" onerror="this.src=\'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&q=80\'" alt="' + item.name + '" style="width:38px;height:38px;border-radius:6px;object-fit:cover;flex-shrink:0;">' +
+                        '<div>' +
+                        '<div style="font-size:12px;font-weight:700;color:#fff;">' + item.name + '</div>' +
+                        '<div style="font-size:10px;color:rgba(255,255,255,0.45);">' + (item.description || '').substring(0,48) + '\u2026</div>' +
+                        '<div style="font-size:11px;font-weight:700;color:#d4af37;">\u20b9' + item.price.toLocaleString('en-IN') + '</div>' +
+                        '</div></a>';
+                }).join('');
+
+                var browseLink = isWineSearch
+                    ? '<a href="wine.html" style="display:inline-block;margin-top:10px;font-size:11px;color:#0ABFAC;text-decoration:none;font-weight:600;">Browse full wine cellar \u2192</a>'
+                    : '<a href="menu.html" style="display:inline-block;margin-top:10px;font-size:11px;color:#0ABFAC;text-decoration:none;font-weight:600;">Browse full menu \u2192</a>';
+
+                var innerHtml = lbl + cards + browseLink;
+                var bRow = document.createElement('div');
+                bRow.className = 'dsw-bot';
+                bRow.innerHTML = '<div class="dsw-mini-avatar"><i data-lucide="bot" style="width:13px;height:13px;color:#000;"></i></div><div class="dsw-bot-bubble">' + innerHtml + '</div>';
+                msgsEl.appendChild(bRow);
+                lucide.createIcons();
+                msgsEl.scrollTop = msgsEl.scrollHeight;
+            }, 850);
+        };
+    </script>
+</body>
+</html>

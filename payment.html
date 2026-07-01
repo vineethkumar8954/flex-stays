@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment | Flex-Stays</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Razorpay Checkout SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* Progress Indicator Styles */
+        .progress-container {
+            padding: 40px 0 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .progress-bar-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .progress-bar-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(13, 42, 42, 0.1);
+            z-index: 1;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid rgba(13, 42, 42, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        
+        .progress-step.active .step-dot {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: var(--shadow-primary);
+        }
+        
+        .progress-step.completed .step-dot {
+            background: var(--forest);
+            border-color: var(--forest);
+            color: #fff;
+        }
+        
+        .step-label {
+            margin-top: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        
+        .progress-step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .progress-step.completed .step-label {
+            color: var(--forest);
+        }
+
+        /* Centered Layout */
+        .payment-container {
+            max-width: 950px;
+            margin: 40px auto;
+        }
+
+        .payment-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        
+        @media (min-width: 768px) {
+            .payment-layout {
+                grid-template-columns: 1.2fr 1fr;
+            }
+        }
+        
+        .payment-card {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(10, 191, 172, 0.08);
+        }
+        
+        .payment-card h2 {
+            font-size: 22px;
+            color: var(--forest);
+            margin-bottom: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Tab Navigation */
+        .payment-tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid rgba(13, 42, 42, 0.08);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+        }
+        
+        .payment-tabs::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+        
+        .payment-tab {
+            padding: 10px 16px;
+            border-radius: var(--radius-full);
+            background: var(--cream-light);
+            color: var(--forest);
+            font-weight: 500;
+            font-size: 13px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(13, 42, 42, 0.05);
+            transition: var(--transition);
+        }
+        
+        .payment-tab:hover {
+            background: rgba(10, 191, 172, 0.05);
+        }
+        
+        .payment-tab.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: var(--shadow-primary);
+        }
+
+        /* Forms */
+        .payment-form {
+            display: none;
+        }
+        
+        .payment-form.active {
+            display: block;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (min-width: 576px) {
+            .form-row.two-cols {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--forest);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-group input {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(13, 42, 42, 0.15);
+            background: var(--cream-light);
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(10, 191, 172, 0.15);
+        }
+
+        /* Checkbox styling */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            user-select: none;
+        }
+        
+        .checkbox-container input {
+            display: none;
+        }
+        
+        .checkbox-checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(13, 42, 42, 0.2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            background: #fff;
+        }
+        
+        .checkbox-container input:checked + .checkbox-checkmark {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+        
+        .checkbox-checkmark i {
+            display: none;
+            width: 12px;
+            height: 12px;
+        }
+        
+        .checkbox-container input:checked + .checkbox-checkmark i {
+            display: block;
+        }
+        
+        .checkbox-label {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* UPI Styling */
+        .upi-apps-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+            align-items: center;
+        }
+        
+        .upi-app-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 32px;
+            background: #fff;
+            border: 1px solid rgba(13, 42, 42, 0.1);
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--text-muted);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Third Party Pay Buttons */
+        .paypal-btn {
+            background: #0070ba;
+            color: #fff;
+            padding: 14px;
+            border-radius: var(--radius-full);
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 112, 186, 0.25);
+            transition: var(--transition);
+        }
+        
+        .paypal-btn:hover {
+            background: #005ea6;
+        }
+        
+        .gpay-btn {
+            background: #000;
+            color: #fff;
+            padding: 14px;
+            border-radius: var(--radius-full);
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+        }
+        
+        .gpay-btn:hover {
+            background: #222;
+        }
+        
+        .applepay-btn {
+            background: #000;
+            color: #fff;
+            padding: 14px;
+            border-radius: var(--radius-full);
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
+        }
+        
+        .applepay-btn:hover {
+            background: #222;
+        }
+
+        /* Security Badges */
+        .security-badges {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(13, 42, 42, 0.08);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        
+        .security-badge i {
+            color: var(--primary);
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Right Summary Card */
+        .summary-card {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(10, 191, 172, 0.08);
+        }
+        
+        .summary-header {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-img {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+        }
+        
+        .summary-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .summary-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--forest);
+            font-family: var(--font-heading);
+        }
+        
+        .summary-dates {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        
+        .summary-detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        
+        .summary-detail-row.bold {
+            font-weight: 600;
+            color: var(--forest);
+        }
+
+        .summary-addons-list {
+            margin-left: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+            list-style: disc;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .divider {
+            height: 1px;
+            background: rgba(13, 42, 42, 0.08);
+            margin: 16px 0;
+        }
+        
+        .grand-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--forest);
+            margin-bottom: 24px;
+        }
+        
+        .grand-total-row .gold-price {
+            color: var(--primary);
+            font-size: 22px;
+        }
+    </style>
+</head>
+<body class="bg-cream">
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar" style="background: var(--forest); position: relative; transform: none; box-shadow: none;">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i data-lucide="hotel"></i></div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#home" class="nav-item">Home</a>
+                <a href="index.html#rooms" class="nav-item">Rooms</a>
+                <a href="index.html#dining" class="nav-item">Dining</a>
+                <a href="index.html#experiences" class="nav-item">Experiences</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-text">Sign In</button>
+                <a href="search-results.html" class="btn btn-primary btn-icon"><span>Book Now</span><i data-lucide="arrow-right"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container payment-container">
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-bar-steps">
+                <div class="progress-step completed">
+                    <div class="step-dot"><i data-lucide="check" style="width: 14px; height: 14px;"></i></div>
+                    <div class="step-label">Room Details</div>
+                </div>
+                <div class="progress-step completed">
+                    <div class="step-dot"><i data-lucide="check" style="width: 14px; height: 14px;"></i></div>
+                    <div class="step-label">Checkout</div>
+                </div>
+                <div class="progress-step active">
+                    <div class="step-dot">3</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-dot">4</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Main Layout -->
+        <div class="payment-layout">
+            <!-- Left Side — Razorpay Payment -->
+            <div class="payment-left">
+                <div class="payment-card">
+                    <h2><i data-lucide="shield-check"></i> Secure Checkout</h2>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5;">
+                        Select your preferred payment method in the secure checkout window. We support UPI (PhonePe, Google Pay, Paytm, BHIM), Credit/Debit Cards, Net Banking, and Wallets.
+                    </p>
+                    
+                    <div style="background: rgba(10, 191, 172, 0.04); border: 1px dashed var(--primary); padding: 20px; border-radius: var(--radius-md); text-align: center; margin-bottom: 24px;">
+                        <div style="font-size: 32px; margin-bottom: 12px;">💳📱🏛️</div>
+                        <div style="font-weight: 600; color: var(--forest); margin-bottom: 4px; font-size: 15px;">All-in-One Payment Suite</div>
+                        <div style="color: var(--text-muted); font-size: 13px; line-height: 1.4;">UPI, Cards, Net Banking, and mobile wallets are processed securely via Razorpay.</div>
+                    </div>
+
+                    <button type="button" id="payNowBtn" class="btn btn-primary btn-full btn-large btn-icon" style="padding: 16px; font-size: 16px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: center; gap: 8px;">
+                        <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+                        <span>Pay Securely with Razorpay</span>
+                    </button>
+                    
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; justify-content: center; margin-top: 10px;">
+                        <span style="font-size: 12px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 4px;">
+                            <i data-lucide="shield-check" style="width: 14px; height: 14px; color: #10b981;"></i> 100% Secure Payment
+                        </span>
+                        <span style="font-size: 11px; color: var(--text-muted);">Powered by <strong>Razorpay</strong></span>
+                    </div>
+                    
+                    <!-- Supported UPI App Badges -->
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px; flex-wrap: wrap; padding: 8px 12px; background: rgba(10, 191, 172, 0.03); border-radius: 8px; border: 1px solid rgba(10, 191, 172, 0.08);">
+                        <span style="font-size: 10px; font-weight: 700; color: var(--forest); text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px;">Supported UPI:</span>
+                        <span style="font-size: 11px; font-weight: 600; color: #5f6368; background: #fff; border: 1px solid #dadce0; border-radius: 6px; padding: 3px 6px; display: inline-flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                            <span style="color: #4285F4; font-weight: 700;">G</span><span style="color: #EA4335; font-weight: 700;">P</span><span style="color: #FBBC05; font-weight: 700;">a</span><span style="color: #34A853; font-weight: 700;">y</span>
+                        </span>
+                        <span style="font-size: 11px; font-weight: 600; color: #5f259f; background: #fff; border: 1px solid #dadce0; border-radius: 6px; padding: 3px 6px; display: inline-flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                            <span style="font-weight: 700;">PhonePe</span>
+                        </span>
+                        <span style="font-size: 11px; font-weight: 600; color: #00baf2; background: #fff; border: 1px solid #dadce0; border-radius: 6px; padding: 3px 6px; display: inline-flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                            <span style="color: #002e6e; font-weight: 700;">Pay</span><span style="font-weight: 700;">tm</span>
+                        </span>
+                        <span style="font-size: 11px; font-weight: 600; color: #e15b27; background: #fff; border: 1px solid #dadce0; border-radius: 6px; padding: 3px 6px; display: inline-flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                            <span style="font-weight: 700; font-style: italic;">BHIM</span>
+                        </span>
+                    </div>
+                    
+                    <!-- Security Badges -->
+                    <div class="security-badges" style="margin-top: 24px; border-top: 1px solid rgba(13, 42, 42, 0.08); padding-top: 20px;">
+                        <div class="security-badge">
+                            <i data-lucide="lock"></i>
+                            <span>256-bit SSL</span>
+                        </div>
+                        <div class="security-badge">
+                            <i data-lucide="shield"></i>
+                            <span>PCI-DSS Secure</span>
+                        </div>
+                        <div class="security-badge">
+                            <i data-lucide="check-circle"></i>
+                            <span>Verified Gateway</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side — Order Summary Card -->
+            <div class="payment-right">
+                <div class="summary-card">
+                    <div class="summary-header">
+                        <img id="summaryRoomImg" src="" alt="Room Image" class="summary-img">
+                        <div class="summary-info">
+                            <div id="summaryRoomName" class="summary-title">Room Name</div>
+                            <div id="summaryStayDates" class="summary-dates">Check-In → Check-Out</div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="summary-detail-row">
+                        <span>Guests</span>
+                        <span id="summaryGuests" class="bold">--</span>
+                    </div>
+                    <div class="summary-detail-row">
+                        <span>Nights</span>
+                        <span id="summaryNights" class="bold">--</span>
+                    </div>
+                    
+                    <div class="divider"></div>
+
+                    <div class="summary-detail-row">
+                        <span>Room Cost</span>
+                        <span id="priceRoomTotal">$0</span>
+                    </div>
+                    
+                    <div id="addonsSummarySection" style="display: none;">
+                        <div class="summary-detail-row" style="margin-bottom: 4px;">
+                            <span>Add-ons</span>
+                            <span id="priceAddonsTotal">$0</span>
+                        </div>
+                        <ul id="addonsList" class="summary-addons-list">
+                            <!-- Add-ons populated dynamically -->
+                        </ul>
+                    </div>
+                    
+                    <div class="summary-detail-row">
+                        <span>Taxes & Fees (12%)</span>
+                        <span id="priceTaxes">$0</span>
+                    </div>
+                    
+                    <div class="summary-detail-row" id="promoDiscountRow" style="display: none; color: #10b981;">
+                        <span>Promo Discount (<span id="promoCodeLabel">WELCOME10</span>)</span>
+                        <span id="pricePromoDiscount">-$0</span>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="grand-total-row">
+                        <span>Total Paid</span>
+                        <span id="priceGrandTotal" class="gold-price">$0</span>
+                    </div>
+
+                    <button type="button" id="completeBookingBtn" class="btn btn-primary btn-full btn-large btn-icon">
+                        <span>Complete Booking</span>
+                        <i data-lucide="shield-check"></i>
+                    </button>
+                    
+                    <p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 16px;">
+                        By clicking "Complete Booking", you agree to our Terms and cancellation policy.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container footer-content">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>Flex-Stays</h2>
+                    <p class="brand-subtitle">HOTELS & RESORTS</p>
+                    <p class="brand-desc">A sanctuary where luxury meets serenity. Every stay is an invitation to experience the extraordinary.</p>
+                    <ul class="contact-list">
+                        <li><i data-lucide="map-pin"></i> 712 Coastal Drive, Melbourne</li>
+                        <li><i data-lucide="phone"></i> +1 (800) 222-8888</li>
+                        <li><i data-lucide="mail"></i> reservations@flexstays.com</li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#rooms">Rooms</a></li>
+                        <li><a href="index.html#dining">Dining</a></li>
+                        <li><a href="index.html#experiences">Experiences</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Rooms</h3>
+                    <ul>
+                        <li><a href="#">Standard Room</a></li>
+                        <li><a href="#">Deluxe Room</a></li>
+                        <li><a href="#">Executive Suite</a></li>
+                        <li><a href="#">Presidential Suite</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Spa & Wellness</a></li>
+                        <li><a href="#">Airport Transfers</a></li>
+                        <li><a href="#">Private Tours</a></li>
+                        <li><a href="#">Concierge</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Flex-Stays Hotels & Resorts. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="roomsData.js"></script>
+    <script src="packagesData.js"></script>
+    <script src="eventsData.js"></script>
+    <script src="menuData.js"></script>
+    <script src="faqData.js"></script>
+    <script src="ai-concierge.js"></script>
+    <script src="auth.js"></script>
+    <script src="payment.js"></script>
+</body>
+</html>

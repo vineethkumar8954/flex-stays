@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed | Flex-Stays</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* Confetti Canvas */
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Progress Indicator Styles */
+        .progress-container {
+            padding: 40px 0 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .progress-bar-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .progress-bar-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(13, 42, 42, 0.1);
+            z-index: 1;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid rgba(13, 42, 42, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        
+        .progress-step.active .step-dot {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: var(--shadow-primary);
+        }
+        
+        .progress-step.completed .step-dot {
+            background: var(--forest);
+            border-color: var(--forest);
+            color: #fff;
+        }
+        
+        .step-label {
+            margin-top: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        
+        .progress-step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .progress-step.completed .step-label {
+            color: var(--forest);
+        }
+
+        /* Success Card Styling */
+        .success-card-container {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .success-card {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(10, 191, 172, 0.12);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animated Checkmark CSS */
+        .checkmark-wrapper {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            position: relative;
+        }
+        
+        .checkmark-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: var(--primary);
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            box-shadow: inset 0px 0px 0px var(--primary);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s forwards;
+        }
+        
+        .checkmark-check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 40px var(--primary);
+            }
+        }
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        .success-title {
+            font-size: 28px;
+            color: var(--forest);
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-family: var(--font-heading);
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.4s forwards;
+        }
+        
+        .success-subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.6s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Booking Details Monospace Card */
+        .booking-details-box {
+            background: var(--cream-light);
+            border: 1px solid rgba(10, 191, 172, 0.1);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        
+        .booking-id-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(13, 42, 42, 0.08);
+            padding-bottom: 14px;
+        }
+        
+        .booking-id-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+        
+        .booking-id-val {
+            font-family: monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .status-badge {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Room Block */
+        .room-details-block {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .room-block-img {
+            width: 100px;
+            height: 75px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+        }
+        
+        .room-block-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .room-block-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--forest);
+        }
+        
+        .room-block-cat {
+            font-size: 12px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        /* Grid stay details */
+        .stay-details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+            border-top: 1px solid rgba(13, 42, 42, 0.06);
+            border-bottom: 1px solid rgba(13, 42, 42, 0.06);
+            padding: 16px 0;
+        }
+        
+        @media (min-width: 576px) {
+            .stay-details-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .stay-grid-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .stay-grid-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        
+        .stay-grid-val {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--forest);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .stay-grid-val i {
+            color: var(--primary);
+            width: 15px;
+            height: 15px;
+        }
+
+        /* Payment detail rows */
+        .payment-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .payment-row.bold {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--forest);
+            border-top: 1px dashed rgba(13, 42, 42, 0.1);
+            padding-top: 10px;
+            margin-top: 6px;
+        }
+
+        /* Guest details box */
+        .guest-details-box {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 16px;
+            background: #fff;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(13, 42, 42, 0.05);
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        @media (min-width: 576px) {
+            .guest-details-box {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        /* Confirmation banner info */
+        .email-banner {
+            background: rgba(10, 191, 172, 0.08);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: var(--forest);
+        }
+        
+        .email-banner i {
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        /* Add to Calendar */
+        .calendar-section {
+            margin-bottom: 30px;
+        }
+        
+        .calendar-section h4 {
+            font-size: 15px;
+            color: var(--forest);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .calendar-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .calendar-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(13, 42, 42, 0.15);
+            background: #fff;
+            transition: var(--transition);
+        }
+        
+        .calendar-btn:hover {
+            background: var(--cream-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .action-buttons-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        @media (min-width: 576px) {
+            .action-buttons-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Print styles for Invoice */
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+                font-family: var(--font-body);
+            }
+            
+            #navbar, footer, .progress-container, .calendar-section, .action-buttons-row, #confettiCanvas, .checkmark-wrapper, .success-subtitle, .email-banner {
+                display: none !important;
+            }
+            
+            .success-card-container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .success-card {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+            }
+            
+            .success-title {
+                opacity: 1 !important;
+                font-size: 24px !important;
+                margin-bottom: 30px !important;
+            }
+            
+            .booking-details-box {
+                background: #fff !important;
+                border: 1px solid #ccc !important;
+                padding: 20px !important;
+            }
+            
+            /* Print Invoice Header */
+            .print-invoice-header {
+                display: block !important;
+                text-align: left;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #333;
+                padding-bottom: 20px;
+            }
+            
+            .print-invoice-header h1 {
+                font-family: var(--font-heading);
+                font-size: 28px;
+                color: #0d2a2a;
+                margin-bottom: 4px;
+            }
+            
+            .print-invoice-header p {
+                font-size: 12px;
+                color: #666;
+                line-height: 1.4;
+            }
+            
+            .print-invoice-footer {
+                display: block !important;
+                margin-top: 50px;
+                border-top: 1px solid #ccc;
+                padding-top: 20px;
+                text-align: center;
+                font-size: 12px;
+                color: #555;
+            }
+        }
+        
+        /* Non-print styles */
+        .print-invoice-header, .print-invoice-footer {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-cream">
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar" style="background: var(--forest); position: relative; transform: none; box-shadow: none;">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i data-lucide="hotel"></i></div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#home" class="nav-item">Home</a>
+                <a href="index.html#rooms" class="nav-item">Rooms</a>
+                <a href="index.html#dining" class="nav-item">Dining</a>
+                <a href="index.html#experiences" class="nav-item">Experiences</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-text">Sign In</button>
+                <a href="search-results.html" class="btn btn-primary btn-icon"><span>Book Now</span><i data-lucide="arrow-right"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="success-card-container">
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-bar-steps">
+                <div class="progress-step completed">
+                    <div class="step-dot"><i data-lucide="check" style="width: 14px; height: 14px;"></i></div>
+                    <div class="step-label">Room Details</div>
+                </div>
+                <div class="progress-step completed">
+                    <div class="step-dot"><i data-lucide="check" style="width: 14px; height: 14px;"></i></div>
+                    <div class="step-label">Checkout</div>
+                </div>
+                <div class="progress-step completed">
+                    <div class="step-dot"><i data-lucide="check" style="width: 14px; height: 14px;"></i></div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="progress-step completed active">
+                    <div class="step-dot" style="background: var(--primary); border-color: var(--primary); color: #fff;"><i data-lucide="award" style="width: 14px; height: 14px;"></i></div>
+                    <div class="step-label" style="color: var(--primary); font-weight: 600;">Confirmation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Content Card -->
+        <div class="success-card">
+            
+            <!-- Invoice Header for Print -->
+            <div class="print-invoice-header">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h1>Flex-Stays Hotels & Resorts</h1>
+                        <p>712 Coastal Drive, Melbourne</p>
+                        <p>Phone: +1 (800) 222-8888</p>
+                        <p>Email: reservations@flexstays.com</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <h2 style="font-family: monospace; font-size: 20px; font-weight: 700; margin-bottom: 4px;">TAX INVOICE</h2>
+                        <p>Date: <span id="printInvoiceDate">--</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkmark Animation -->
+            <div class="checkmark-wrapper">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+
+            <h1 class="success-title">Booking Confirmed!</h1>
+            <p class="success-subtitle">Your luxury escape has been reserved successfully. We are excited to welcome you!</p>
+
+            <!-- Invoice / Details Monospace Block -->
+            <div class="booking-details-box">
+                <div class="booking-id-row">
+                    <div>
+                        <span class="booking-id-title">Booking ID</span>
+                        <div id="bookingId" class="booking-id-val">BK-XXXXX</div>
+                    </div>
+                    <span class="status-badge">Confirmed</span>
+                </div>
+
+                <!-- Room details info -->
+                <div class="room-details-block">
+                    <img id="roomImg" src="" alt="Room Image" class="room-block-img">
+                    <div class="room-block-info">
+                        <div id="roomName" class="room-block-name">Room Name</div>
+                        <div id="roomCat" class="room-block-cat">Room Category</div>
+                    </div>
+                </div>
+
+                <!-- Stay Details Grid -->
+                <div class="stay-details-grid">
+                    <div class="stay-grid-item">
+                        <span class="stay-grid-label">Check-In</span>
+                        <span class="stay-grid-val"><i data-lucide="calendar"></i> <span id="checkinDate">--</span></span>
+                    </div>
+                    <div class="stay-grid-item">
+                        <span class="stay-grid-label">Check-Out</span>
+                        <span class="stay-grid-val"><i data-lucide="calendar"></i> <span id="checkoutDate">--</span></span>
+                    </div>
+                    <div class="stay-grid-item">
+                        <span class="stay-grid-label">Guests</span>
+                        <span class="stay-grid-val"><i data-lucide="users"></i> <span id="guestsCount">--</span></span>
+                    </div>
+                    <div class="stay-grid-item">
+                        <span class="stay-grid-label">Nights</span>
+                        <span class="stay-grid-val"><i data-lucide="moon"></i> <span id="nightsCount">--</span></span>
+                    </div>
+                </div>
+
+                <!-- Costs details -->
+                <div class="payment-rows">
+                    <div class="payment-row">
+                        <span>Room Cost</span>
+                        <span id="priceRoomTotal">$0</span>
+                    </div>
+                    
+                    <!-- Addons Row dynamically added -->
+                    <div id="addonsSummaryRow" class="payment-row" style="display: none;">
+                        <span>Add-ons</span>
+                        <span id="priceAddonsTotal">$0</span>
+                    </div>
+                    
+                    <div class="payment-row">
+                        <span>Taxes & Fees (12%)</span>
+                        <span id="priceTaxes">$0</span>
+                    </div>
+                    
+                    <div id="promoDiscountRow" class="payment-row" style="display: none; color: #10b981;">
+                        <span>Promo Discount (<span id="promoCodeLabel">WELCOME10</span>)</span>
+                        <span id="pricePromoDiscount">-$0</span>
+                    </div>
+                    
+                    <div class="payment-row bold">
+                        <span>Total Paid</span>
+                        <span id="priceGrandTotal">$0</span>
+                    </div>
+                    
+                    <div class="payment-row" style="margin-top: 10px; font-size: 12px;">
+                        <span>Payment Method</span>
+                        <span id="paymentMethod" style="font-weight: 500;">Credit Card</span>
+                    </div>
+                </div>
+
+                <!-- Guest details in box -->
+                <div class="guest-details-box">
+                    <div>
+                        <strong>Primary Guest:</strong>
+                        <div id="guestName" style="margin-top: 4px;">John Doe</div>
+                    </div>
+                    <div>
+                        <strong>Contact Info:</strong>
+                        <div id="guestContact" style="margin-top: 4px;">john.doe@example.com<br>+1 (555) 000-0000</div>
+                    </div>
+                    <div style="grid-column: 1 / -1; border-top: 1px solid rgba(13, 42, 42, 0.05); padding-top: 10px; display: none;" id="specialRequestsBlock">
+                        <strong>Special Requests:</strong>
+                        <div id="specialRequests" style="margin-top: 4px; font-style: italic;">No special requests.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email confirmation banner -->
+            <div class="email-banner">
+                <i data-lucide="mail"></i>
+                <div>
+                    <strong>Confirmation Email Sent</strong>
+                    <div>A detailed summary and receipt has been sent to <span id="confirmEmail" style="font-weight: 600;">john.doe@example.com</span>.</div>
+                </div>
+            </div>
+
+            <!-- Calendar Section -->
+            <div class="calendar-section">
+                <h4>Save Your Stay to Calendar</h4>
+                <div class="calendar-buttons">
+                    <a href="#" id="googleCalendarBtn" target="_blank" class="calendar-btn">
+                        <span>📅 Google Calendar</span>
+                    </a>
+                    <button id="outlookCalendarBtn" class="calendar-btn">
+                        <span>📅 Outlook / Apple (.ics)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons-row">
+                <button id="printInvoiceBtn" class="btn btn-outline-forest btn-icon">
+                    <i data-lucide="printer"></i> <span>Download Invoice</span>
+                </button>
+                <a href="guest-dashboard.html" id="viewDashboardBtn" class="btn btn-outline-forest btn-icon">
+                    <i data-lucide="layout-dashboard"></i> <span>View Booking</span>
+                </a>
+                <a href="index.html" class="btn btn-primary btn-icon">
+                    <span>Return Home</span> <i data-lucide="home"></i>
+                </a>
+            </div>
+
+            <!-- Invoice Footer for Print -->
+            <div class="print-invoice-footer">
+                <p>Thank you for choosing Flex-Stays Hotels & Resorts.</p>
+                <p style="margin-top: 4px; font-size: 10px; color: #888;">This is a computer generated document, no signature required.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5" id="footer">
+        <div class="container footer-content">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>Flex-Stays</h2>
+                    <p class="brand-subtitle">HOTELS & RESORTS</p>
+                    <p class="brand-desc">A sanctuary where luxury meets serenity. Every stay is an invitation to experience the extraordinary.</p>
+                    <ul class="contact-list">
+                        <li><i data-lucide="map-pin"></i> 712 Coastal Drive, Melbourne</li>
+                        <li><i data-lucide="phone"></i> +1 (800) 222-8888</li>
+                        <li><i data-lucide="mail"></i> reservations@flexstays.com</li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#rooms">Rooms</a></li>
+                        <li><a href="index.html#dining">Dining</a></li>
+                        <li><a href="index.html#experiences">Experiences</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Rooms</h3>
+                    <ul>
+                        <li><a href="#">Standard Room</a></li>
+                        <li><a href="#">Deluxe Room</a></li>
+                        <li><a href="#">Executive Suite</a></li>
+                        <li><a href="#">Presidential Suite</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Spa & Wellness</a></li>
+                        <li><a href="#">Airport Transfers</a></li>
+                        <li><a href="#">Private Tours</a></li>
+                        <li><a href="#">Concierge</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Flex-Stays Hotels & Resorts. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="roomsData.js"></script>
+    <script src="packagesData.js"></script>
+    <script src="eventsData.js"></script>
+    <script src="menuData.js"></script>
+    <script src="faqData.js"></script>
+    <script src="ai-concierge.js"></script>
+    <script src="auth.js"></script>
+    <script src="confirmation.js"></script>
+</body>
+</html>

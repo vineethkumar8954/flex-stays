@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | Flex-Stays</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Flatpickr Datepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-search">
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar" style="background: var(--forest);">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="hotel"></i>
+                </div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#home" class="nav-item">Home</a>
+                <a href="index.html#rooms" class="nav-item active">Rooms</a>
+                <a href="index.html#dining" class="nav-item">Dining</a>
+                <a href="index.html#experiences" class="nav-item">Experiences</a>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-text">Sign In</a>
+                <button class="btn btn-primary btn-icon">
+                    Contact Us <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+            <button class="mobile-menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Search Summary Header -->
+    <div class="search-summary-bar">
+        <div class="container">
+            <div class="search-summary-inner">
+                <div class="search-summary-details">
+                    <div class="detail-item">
+                        <i data-lucide="calendar"></i> Oct 12 - Oct 15
+                    </div>
+                    <div class="detail-divider"></div>
+                    <div class="detail-item">
+                        <i data-lucide="users"></i> 2 Guests
+                    </div>
+                    <div class="detail-divider"></div>
+                    <div class="detail-item">
+                        <i data-lucide="bed-double"></i> Any Room
+                    </div>
+                </div>
+                <button class="btn btn-outline-forest btn-sm">Edit Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results Content -->
+    <section class="search-results-section bg-cream">
+        <div class="container search-layout">
+            
+            <!-- Sidebar Filters -->
+            <aside class="sidebar-filters">
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h3>Filters</h3>
+                        <button class="btn-clear-filters">Clear All</button>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Price Range (Per Night)</h4>
+                        <div class="price-slider">
+                            <input type="range" min="200" max="5000" value="1500" class="slider" id="priceRange">
+                            <div class="price-labels">
+                                <span>$200</span>
+                                <span>$5,000+</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Room Type</h4>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="Standard Rooms" class="filter-checkbox filter-type">
+                            <span class="checkmark"></span> Standard Rooms
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="Deluxe Rooms" class="filter-checkbox filter-type">
+                            <span class="checkmark"></span> Deluxe Rooms
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="Executive Suites" class="filter-checkbox filter-type" checked>
+                            <span class="checkmark"></span> Executive Suites
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="Presidential Suites" class="filter-checkbox filter-type">
+                            <span class="checkmark"></span> Presidential Suites
+                        </label>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Amenities</h4>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="Ocean View" class="filter-checkbox filter-amenity">
+                            <span class="checkmark"></span> Ocean View
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="Breakfast Included" class="filter-checkbox filter-amenity">
+                            <span class="checkmark"></span> Breakfast Included
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="Free Cancellation" class="filter-checkbox filter-amenity">
+                            <span class="checkmark"></span> Free Cancellation
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="Private Balcony" class="filter-checkbox filter-amenity">
+                            <span class="checkmark"></span> Private Balcony
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" value="Butler Service" class="filter-checkbox filter-amenity">
+                            <span class="checkmark"></span> Butler Service
+                        </label>
+                    </div>
+
+                    <div class="filter-actions mt-4">
+                        <button class="btn btn-primary btn-full" id="applyFiltersBtn">Apply Filters</button>
+                        <button class="btn btn-outline-forest btn-full mt-3" id="resetFiltersBtn">Reset Filters</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Results Area -->
+            <div class="results-area">
+                
+                <!-- Compare Bar -->
+                <div class="compare-bar" id="compareBar">
+                    <div class="compare-count">Compare (<span id="compareCount">0</span> Selected)</div>
+                    <div class="compare-actions">
+                        <button class="btn btn-gold btn-sm" id="compareRoomsBtn">Compare Rooms</button>
+                        <button class="btn btn-text btn-sm" id="clearCompareBtn">Clear</button>
+                    </div>
+                </div>
+
+                <div class="results-header">
+                    <h2 class="results-title" id="resultsCount">12 Rooms Available</h2>
+                    <div class="sort-by-wrapper">
+                        <span>Sort By:</span>
+                        <select class="sort-select">
+                            <option value="recommended">Recommended</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="rating">Guest Rating</option>
+                            <option value="popular">Most Popular</option>
+                            <option value="luxury">Luxury First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Active Filters -->
+                <div class="active-filters-container" id="activeFiltersContainer">
+                    <span class="filter-label">Showing Results For:</span>
+                    <div class="active-chips" id="activeChips">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- AI Recommendation Banner -->
+                <div class="ai-banner" id="aiBanner">
+                    <div class="ai-banner-header">
+                        <i data-lucide="sparkles"></i>
+                        <span>Recommended For You</span>
+                    </div>
+                    <p id="aiBannerText">Based on your dates and preference for an ocean view, we recommend the <strong>Executive Ocean Suite</strong>. It offers the best value for 2 guests.</p>
+                </div>
+
+                <div class="room-list" id="roomListContainer">
+                    <!-- Filled by JS -->
+                </div>
+                
+                <div class="pagination-container" id="paginationContainer">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick View Modal -->
+    <div class="modal-overlay" id="quickViewModal">
+        <div class="modal-content side-drawer">
+            <button class="modal-close" id="closeQuickView"><i data-lucide="x"></i></button>
+            <div class="drawer-image">
+                <img id="qvImage" src="" alt="Room Image">
+            </div>
+            <div class="drawer-details">
+                <div class="drawer-header">
+                    <h2 id="qvTitle">Room Name</h2>
+                    <div class="room-rating"><i data-lucide="star" class="text-gold star-fill"></i> <span id="qvRating">4.9</span></div>
+                </div>
+                <p class="drawer-desc" id="qvDesc">Room description goes here.</p>
+                
+                <h4 class="drawer-subtitle">Amenities</h4>
+                <div class="drawer-amenities" id="qvAmenities">
+                    <!-- Filled by JS -->
+                </div>
+                
+                <div class="drawer-footer">
+                    <div class="price-amount" id="qvPrice">$0</div>
+                    <div class="drawer-actions">
+                        <button class="btn btn-outline-forest">View Full Details</button>
+                        <button class="btn btn-primary">Reserve Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compare Modal -->
+    <div class="modal-overlay" id="compareModal">
+        <div class="modal-content large-modal">
+            <button class="modal-close" id="closeCompare"><i data-lucide="x"></i></button>
+            <div class="modal-header">
+                <h2>Compare Rooms</h2>
+            </div>
+            <div class="modal-body">
+                <div class="ai-comparison-summary" id="aiComparisonSummary" style="display: none;">
+                    <div class="summary-header">
+                        <i data-lucide="sparkles"></i> AI Comparison Summary
+                    </div>
+                    <ul class="summary-list" id="summaryList">
+                        <!-- Filled by JS -->
+                    </ul>
+                </div>
+                <div class="compare-grid" id="compareGrid">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-newsletter">
+            <div class="container newsletter-inner">
+                <div class="newsletter-text">
+                    <p class="newsletter-subtitle">STAY CONNECTED</p>
+                    <h2>Receive Exclusive Offers</h2>
+                </div>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Your email address">
+                    <button class="btn btn-primary">SUBSCRIBE</button>
+                </div>
+            </div>
+        </div>
+        <div class="container footer-content">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>Flex-Stays</h2>
+                    <p class="brand-subtitle">HOTELS & RESORTS</p>
+                    <p class="brand-desc">A sanctuary where luxury meets serenity. Every stay is an invitation to experience the extraordinary.</p>
+                    <ul class="contact-list">
+                        <li><i data-lucide="map-pin"></i> 712 Coastal Drive, Melbourne</li>
+                        <li><i data-lucide="phone"></i> +1 (800) 222-8888</li>
+                        <li><i data-lucide="mail"></i> reservations@flexstays.com</li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html#rooms">Rooms</a></li>
+                        <li><a href="index.html#dining">Dining</a></li>
+                        <li><a href="index.html#experiences">Experiences</a></li>
+                        <li><a href="index.html#events">Events</a></li>
+                        <li><a href="index.html#testimonials">Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Rooms</h3>
+                    <ul>
+                        <li><a href="#">Standard Room</a></li>
+                        <li><a href="#">Deluxe Room</a></li>
+                        <li><a href="#">Executive Suite</a></li>
+                        <li><a href="#">Presidential Suite</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Spa & Wellness</a></li>
+                        <li><a href="#">Airport Transfers</a></li>
+                        <li><a href="#">Private Tours</a></li>
+                        <li><a href="#">Concierge</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Flex-Stays Hotels & Resorts. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="auth.js"></script>
+    <script src="roomsData.js"></script>
+    <script src="packagesData.js"></script>
+    <script src="eventsData.js"></script>
+    <script src="menuData.js"></script>
+    <script src="faqData.js"></script>
+    <script src="ai-concierge.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

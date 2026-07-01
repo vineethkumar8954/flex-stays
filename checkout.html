@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Flex-Stays</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Flatpickr (Datepicker) CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* Progress Indicator Styles */
+        .progress-container {
+            padding: 40px 0 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .progress-bar-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .progress-bar-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(13, 42, 42, 0.1);
+            z-index: 1;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid rgba(13, 42, 42, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        
+        .progress-step.active .step-dot {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: var(--shadow-primary);
+        }
+        
+        .progress-step.completed .step-dot {
+            background: var(--forest);
+            border-color: var(--forest);
+            color: #fff;
+        }
+        
+        .step-label {
+            margin-top: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        
+        .progress-step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .progress-step.completed .step-label {
+            color: var(--forest);
+        }
+
+        /* Two Column Layout */
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        @media (min-width: 992px) {
+            .checkout-layout {
+                grid-template-columns: 1.6fr 1fr;
+            }
+        }
+        
+        .checkout-card {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(10, 191, 172, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .checkout-card h2 {
+            font-size: 22px;
+            color: var(--forest);
+            margin-bottom: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (min-width: 576px) {
+            .form-row.two-cols {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--forest);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(13, 42, 42, 0.15);
+            background: var(--cream-light);
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(10, 191, 172, 0.15);
+        }
+
+        /* Add-ons Grid */
+        .addons-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        
+        @media (min-width: 576px) {
+            .addons-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .addon-card {
+            border: 1px solid rgba(13, 42, 42, 0.1);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--cream-light);
+        }
+        
+        .addon-card:hover {
+            border-color: var(--primary-transparent);
+            background: rgba(10, 191, 172, 0.02);
+        }
+        
+        .addon-card.selected {
+            border-color: var(--primary);
+            background: rgba(10, 191, 172, 0.05);
+            box-shadow: 0 4px 12px rgba(10, 191, 172, 0.08);
+        }
+        
+        .addon-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid rgba(13, 42, 42, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            background: #fff;
+        }
+        
+        .addon-card.selected .addon-checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+        
+        .addon-checkbox i {
+            display: none;
+            width: 12px;
+            height: 12px;
+        }
+        
+        .addon-card.selected .addon-checkbox i {
+            display: block;
+        }
+        
+        .addon-icon {
+            font-size: 24px;
+        }
+        
+        .addon-info {
+            flex-grow: 1;
+        }
+        
+        .addon-name {
+            font-weight: 600;
+            color: var(--forest);
+            font-size: 14px;
+        }
+        
+        .addon-price {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* Promo Code Section */
+        .promo-container {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .promo-input {
+            flex-grow: 1;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(13, 42, 42, 0.15);
+            background: var(--cream-light);
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .promo-btn {
+            background: var(--forest);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .promo-btn:hover {
+            background: var(--forest-light);
+        }
+        
+        .promo-message {
+            margin-top: 8px;
+            font-size: 13px;
+            display: none;
+        }
+        
+        .promo-message.success {
+            color: #10b981;
+            display: block;
+        }
+        
+        .promo-message.error {
+            color: #ef4444;
+            display: block;
+        }
+
+        /* Booking Summary Side Card */
+        .summary-card {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(10, 191, 172, 0.08);
+            position: sticky;
+            top: 100px;
+        }
+        
+        .summary-room-image {
+            width: 100%;
+            height: 180px;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        
+        .summary-room-title {
+            font-size: 20px;
+            color: var(--forest);
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-family: var(--font-heading);
+        }
+        
+        .summary-room-category {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .summary-details {
+            border-top: 1px solid rgba(13, 42, 42, 0.08);
+            border-bottom: 1px solid rgba(13, 42, 42, 0.08);
+            padding: 16px 0;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .summary-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+        
+        .summary-detail-item i {
+            color: var(--primary);
+            width: 18px;
+            height: 18px;
+        }
+        
+        .price-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        .price-row.total {
+            border-top: 1px dashed rgba(13, 42, 42, 0.15);
+            padding-top: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--forest);
+        }
+        
+        .price-row.total .gold-price {
+            color: var(--primary);
+            font-size: 22px;
+        }
+        
+        .price-row.discount {
+            color: #10b981;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-cream">
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar" style="background: var(--forest); position: relative; transform: none; box-shadow: none;">
+        <div class="container navbar-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i data-lucide="hotel"></i></div>
+                <span>Flex-Stays</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#home" class="nav-item">Home</a>
+                <a href="index.html#rooms" class="nav-item">Rooms</a>
+                <a href="index.html#dining" class="nav-item">Dining</a>
+                <a href="index.html#experiences" class="nav-item">Experiences</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn btn-text">Sign In</button>
+                <a href="search-results.html" class="btn btn-primary btn-icon"><span>Book Now</span><i data-lucide="arrow-right"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-bar-steps">
+                <div class="progress-step completed">
+                    <div class="step-dot"><i data-lucide="check" style="width: 14px; height: 14px;"></i></div>
+                    <div class="step-label">Room Details</div>
+                </div>
+                <div class="progress-step active">
+                    <div class="step-dot">2</div>
+                    <div class="step-label">Checkout</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-dot">3</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="progress-step">
+                    <div class="step-dot">4</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+        </div>
+        <!-- Empty State Container -->
+        <div id="checkoutEmptyState" style="display: none; text-align: center; padding: 60px 20px; max-width: 600px; margin: 40px auto; background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid rgba(10, 191, 172, 0.1);">
+            <div style="font-size: 64px; margin-bottom: 20px;">🛎️</div>
+            <h2 style="font-family: var(--font-heading); color: var(--forest); font-size: 26px; font-weight: 600; margin-bottom: 12px;">No booking selected</h2>
+            <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 28px; line-height: 1.6;">You haven't selected a room or experience package to book yet. Explore our luxury suites and exclusive packages to start planning your perfect stay.</p>
+            <a href="search-results.html" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; font-size: 14px; font-weight: 600; border-radius: 8px; text-decoration: none;">
+                <span>Browse Rooms</span>
+                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+        </div>
+
+        <!-- Checkout Main Layout -->
+        <div class="checkout-layout">
+            
+            <!-- Left Column -->
+            <div class="checkout-left">
+                <!-- Guest Information -->
+                <div class="checkout-card animate-on-scroll">
+                    <h2><i data-lucide="user"></i> Guest Information</h2>
+                    <form id="checkoutForm">
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" id="firstName" required placeholder="John">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" required placeholder="Doe">
+                            </div>
+                        </div>
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" required placeholder="john.doe@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" required placeholder="+1 (555) 000-0000">
+                            </div>
+                        </div>
+                        <div class="form-row two-cols">
+                            <div class="form-group">
+                                <label for="country">Country *</label>
+                                <select id="country" required>
+                                    <option value="">Select Country</option>
+                                    <option value="India">India</option>
+                                    <option value="USA">USA</option>
+                                    <option value="UK">UK</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="France">France</option>
+                                    <option value="Japan">Japan</option>
+                                    <option value="Singapore">Singapore</option>
+                                    <option value="UAE">UAE</option>
+                                    <option value="Brazil">Brazil</option>
+                                    <option value="South Africa">South Africa</option>
+                                    <option value="Italy">Italy</option>
+                                    <option value="Spain">Spain</option>
+                                    <option value="China">China</option>
+                                    <option value="Mexico">Mexico</option>
+                                    <option value="Thailand">Thailand</option>
+                                    <option value="Indonesia">Indonesia</option>
+                                    <option value="Saudi Arabia">Saudi Arabia</option>
+                                    <option value="South Korea">South Korea</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="arrivalTime">Estimated Arrival Time</label>
+                                <input type="time" id="arrivalTime" value="14:00">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="specialRequests">Special Requests</label>
+                            <textarea id="specialRequests" rows="4" placeholder="E.g., high floor, dietary restrictions, extra pillows, early check-in preference..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Add-ons Section -->
+                <div class="checkout-card animate-on-scroll">
+                    <h2><i data-lucide="plus-circle"></i> Enhance Your Stay</h2>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Add exclusive luxury upgrades and services to your booking.</p>
+                    <div class="addons-grid">
+                        <!-- Airport Pickup -->
+                        <div class="addon-card" data-addon-id="airport" data-price="75">
+                            <div class="addon-checkbox">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <span class="addon-icon">✈️</span>
+                            <div class="addon-info">
+                                <div class="addon-name">Airport Pickup</div>
+                                <div class="addon-price">+$75 / trip</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Spa Package -->
+                        <div class="addon-card" data-addon-id="spa" data-price="120">
+                            <div class="addon-checkbox">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <span class="addon-icon">🧖</span>
+                            <div class="addon-info">
+                                <div class="addon-name">Spa Package</div>
+                                <div class="addon-price">+$120 / person</div>
+                            </div>
+                        </div>
+
+                        <!-- Birthday Decoration -->
+                        <div class="addon-card" data-addon-id="birthday" data-price="50">
+                            <div class="addon-checkbox">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <span class="addon-icon">🎂</span>
+                            <div class="addon-info">
+                                <div class="addon-name">Birthday Decoration</div>
+                                <div class="addon-price">+$50 / setup</div>
+                            </div>
+                        </div>
+
+                        <!-- VIP Concierge -->
+                        <div class="addon-card" data-addon-id="vip" data-price="200">
+                            <div class="addon-checkbox">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <span class="addon-icon">👑</span>
+                            <div class="addon-info">
+                                <div class="addon-name">VIP Concierge</div>
+                                <div class="addon-price">+$200 / stay</div>
+                            </div>
+                        </div>
+
+                        <!-- Private Dining -->
+                        <div class="addon-card" data-addon-id="dining" data-price="150">
+                            <div class="addon-checkbox">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <span class="addon-icon">🍽️</span>
+                            <div class="addon-info">
+                                <div class="addon-name">Private Dining</div>
+                                <div class="addon-price">+$150 / meal</div>
+                            </div>
+                        </div>
+
+                        <!-- Anniversary Setup -->
+                        <div class="addon-card" data-addon-id="anniversary" data-price="90">
+                            <div class="addon-checkbox">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <span class="addon-icon">💐</span>
+                            <div class="addon-info">
+                                <div class="addon-name">Anniversary Setup</div>
+                                <div class="addon-price">+$90 / setup</div>
+                            </div>
+                        </div>
+
+                        <!-- Early Check-In -->
+                        <div class="addon-card" data-addon-id="early" data-price="60">
+                            <div class="addon-checkbox">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <span class="addon-icon">⏰</span>
+                            <div class="addon-info">
+                                <div class="addon-name">Early Check-In</div>
+                                <div class="addon-price">+$60 / request</div>
+                            </div>
+                        </div>
+
+                        <!-- Late Check-Out -->
+                        <div class="addon-card" data-addon-id="late" data-price="60">
+                            <div class="addon-checkbox">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <span class="addon-icon">🌙</span>
+                            <div class="addon-info">
+                                <div class="addon-name">Late Check-Out</div>
+                                <div class="addon-price">+$60 / request</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coupon / Promo Code -->
+                <div class="checkout-card animate-on-scroll">
+                    <h2><i data-lucide="ticket"></i> Coupon / Promo Code</h2>
+                    <p style="color: var(--text-muted); font-size: 14px;">Enter promo code to apply special discounts (E.g. WELCOME10, SUMMER25, VIP50).</p>
+                    <div class="promo-container">
+                        <input type="text" id="promoCodeInput" class="promo-input" placeholder="Enter Promo Code">
+                        <button type="button" id="applyPromoBtn" class="promo-btn">Apply</button>
+                    </div>
+                    <div id="promoMessage" class="promo-message"></div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="checkout-right">
+                <div class="summary-card animate-on-scroll">
+                    <img id="summaryRoomImg" src="" alt="Room Image" class="summary-room-image">
+                    <h3 id="summaryRoomName" class="summary-room-title">Room Name</h3>
+                    <div id="summaryRoomCat" class="summary-room-category">Room Category</div>
+                    
+                    <div class="summary-details">
+                        <div class="summary-detail-item">
+                            <i data-lucide="calendar"></i>
+                            <span><strong>Check-In:</strong> <span id="summaryCheckin">--</span></span>
+                        </div>
+                        <div class="summary-detail-item">
+                            <i data-lucide="calendar"></i>
+                            <span><strong>Check-Out:</strong> <span id="summaryCheckout">--</span></span>
+                        </div>
+                        <div class="summary-detail-item">
+                            <i data-lucide="users"></i>
+                            <span><strong>Guests:</strong> <span id="summaryGuests">--</span></span>
+                        </div>
+                        <div class="summary-detail-item">
+                            <i data-lucide="moon"></i>
+                            <span><strong>Nights:</strong> <span id="summaryNights">--</span></span>
+                        </div>
+                    </div>
+
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Room Cost</span>
+                            <span id="priceRoomTotal">$0</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Add-ons</span>
+                            <span id="priceAddonsTotal">$0</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Taxes & Fees (12%)</span>
+                            <span id="priceTaxes">$0</span>
+                        </div>
+                        <div class="price-row discount" id="promoDiscountRow" style="display: none;">
+                            <span>Promo Discount (<span id="promoDiscountPercentage">0%</span>)</span>
+                            <span id="pricePromoDiscount">-$0</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Grand Total</span>
+                            <span id="priceGrandTotal" class="gold-price">$0</span>
+                        </div>
+                    </div>
+
+                    <button type="button" id="continueToPaymentBtn" class="btn btn-primary btn-full btn-large btn-icon">
+                        <span>Continue to Payment</span>
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                    <p class="text-center text-muted mt-3" style="font-size:13px; margin-bottom: 0;">You won't be charged yet</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container footer-content">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>Flex-Stays</h2>
+                    <p class="brand-subtitle">HOTELS & RESORTS</p>
+                    <p class="brand-desc">A sanctuary where luxury meets serenity. Every stay is an invitation to experience the extraordinary.</p>
+                    <ul class="contact-list">
+                        <li><i data-lucide="map-pin"></i> 712 Coastal Drive, Melbourne</li>
+                        <li><i data-lucide="phone"></i> +1 (800) 222-8888</li>
+                        <li><i data-lucide="mail"></i> reservations@flexstays.com</li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#rooms">Rooms</a></li>
+                        <li><a href="index.html#dining">Dining</a></li>
+                        <li><a href="index.html#experiences">Experiences</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Rooms</h3>
+                    <ul>
+                        <li><a href="#">Standard Room</a></li>
+                        <li><a href="#">Deluxe Room</a></li>
+                        <li><a href="#">Executive Suite</a></li>
+                        <li><a href="#">Presidential Suite</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Spa & Wellness</a></li>
+                        <li><a href="#">Airport Transfers</a></li>
+                        <li><a href="#">Private Tours</a></li>
+                        <li><a href="#">Concierge</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Flex-Stays Hotels & Resorts. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="roomsData.js"></script>
+    <script src="packagesData.js"></script>
+    <script src="eventsData.js"></script>
+    <script src="menuData.js"></script>
+    <script src="faqData.js"></script>
+    <script src="ai-concierge.js"></script>
+    <script src="auth.js"></script>
+    <script src="checkout.js"></script>
+</body>
+</html>
